@@ -167,9 +167,15 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
             AccountFactory<?> f1 = Accounts.FACTORIES.get(0);
             tabs[0] = new TabControl.Tab<>(Accounts.getLoginType(f1), Accounts.getLocalizedLoginTypeName(f1));
             tabs[0].setUserData(f1);
+            if (factory == f1) {
+                selected = tabs[0];
+            }
             AccountFactory<?> f2 = Accounts.FACTORIES.get(3);
             tabs[1] = new TabControl.Tab<>(Accounts.getLoginType(f2), Accounts.getLocalizedLoginTypeName(f2));
             tabs[1].setUserData(f2);
+            if (factory == f2) {
+                selected = tabs[1];
+            }
 
             TabHeader tabHeader = new TabHeader(tabs);
             tabHeader.getStyleClass().add("add-account-tab-header");
