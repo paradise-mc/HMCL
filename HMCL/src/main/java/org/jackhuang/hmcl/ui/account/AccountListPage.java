@@ -107,21 +107,30 @@ public class AccountListPage extends DecoratorAnimatedPage implements DecoratorP
                     offlineItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(Accounts.FACTORY_OFFLINE)));
                     boxMethods.getChildren().add(offlineItem);
 
-                    AdvancedListItem mojangItem = new AdvancedListItem();
-                    mojangItem.getStyleClass().add("navigation-drawer-item");
-                    mojangItem.setActionButtonVisible(false);
-                    mojangItem.setTitle(i18n("account.methods.yggdrasil"));
-                    mojangItem.setLeftGraphic(wrap(SVG.MOJANG));
-                    mojangItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(Accounts.FACTORY_MOJANG)));
-                    boxMethods.getChildren().add(mojangItem);
+//                    AdvancedListItem mojangItem = new AdvancedListItem();
+//                    mojangItem.getStyleClass().add("navigation-drawer-item");
+//                    mojangItem.setActionButtonVisible(false);
+//                    mojangItem.setTitle(i18n("account.methods.yggdrasil"));
+//                    mojangItem.setLeftGraphic(wrap(SVG.MOJANG));
+//                    mojangItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(Accounts.FACTORY_MOJANG)));
+//                    boxMethods.getChildren().add(mojangItem);
 
-                    AdvancedListItem microsoftItem = new AdvancedListItem();
-                    microsoftItem.getStyleClass().add("navigation-drawer-item");
-                    microsoftItem.setActionButtonVisible(false);
-                    microsoftItem.setTitle(i18n("account.methods.microsoft"));
-                    microsoftItem.setLeftGraphic(wrap(SVG.MICROSOFT));
-                    microsoftItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(Accounts.FACTORY_MICROSOFT)));
-                    boxMethods.getChildren().add(microsoftItem);
+//                    AdvancedListItem microsoftItem = new AdvancedListItem();
+//                    microsoftItem.getStyleClass().add("navigation-drawer-item");
+//                    microsoftItem.setActionButtonVisible(false);
+//                    microsoftItem.setTitle(i18n("account.methods.microsoft"));
+//                    microsoftItem.setLeftGraphic(wrap(SVG.MICROSOFT));
+//                    microsoftItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(Accounts.FACTORY_MICROSOFT)));
+//                    boxMethods.getChildren().add(microsoftItem);
+
+                    AuthlibInjectorServer paradise = new AuthlibInjectorServer("https://paradise.mahoutsukai.cn/api/paradise/yggdrasil/");
+                    AdvancedListItem paradiseItem = new AdvancedListItem();
+                    paradiseItem.getStyleClass().add("navigation-drawer-item");
+                    paradiseItem.setActionButtonVisible(false);
+                    paradiseItem.setTitle(i18n("account.skin.type.paradise"));
+                    paradiseItem.setLeftGraphic(wrap(SVG.MICROSOFT));
+                    paradiseItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(paradise)));
+                    boxMethods.getChildren().add(paradiseItem);
 
                     VBox boxAuthServers = new VBox();
                     authServerItems = MappedObservableList.create(skinnable.authServersProperty(), server -> {

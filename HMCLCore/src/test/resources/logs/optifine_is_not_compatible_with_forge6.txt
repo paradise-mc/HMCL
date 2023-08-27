@@ -1,7 +1,7 @@
 WARNING: Unknown module: cpw.mods.bootstraplauncher specified to --add-exports
 [authlib-injector] [INFO] Logging file: C:\Users\********\AppData\Roaming\.minecraft\versions\鎮犵劧浜虹敓1.0\authlib-injector.log
 [authlib-injector] [INFO] Version: 1.2.3
-[authlib-injector] [INFO] Authentication server: https://littleskin.cn/api/yggdrasil
+[authlib-injector] [INFO] Authentication server: https://paradise.mahoutsukai.cn/api/paradise/yggdrasil
 [authlib-injector] [INFO] Httpd is running on port 50187
 [authlib-injector] [INFO] Transformed [com.mojang.patchy.BlockedServers] with [Constant URL Transformer]
 [authlib-injector] [INFO] Transformed [com.mojang.authlib.HttpAuthenticationService] with [ConcatenateURL Workaround]

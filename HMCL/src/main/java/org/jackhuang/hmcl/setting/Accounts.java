@@ -227,14 +227,14 @@ public final class Accounts {
         if (initialized)
             throw new IllegalStateException("Already initialized");
 
-        if (!config().isAddedLittleSkin()) {
-            AuthlibInjectorServer littleSkin = new AuthlibInjectorServer("https://littleskin.cn/api/yggdrasil/");
+        if (!config().isAddedParadise()) {
+            AuthlibInjectorServer paradise = new AuthlibInjectorServer("https://paradise.mahoutsukai.cn/api/paradise/yggdrasil/");
 
-            if (config().getAuthlibInjectorServers().stream().noneMatch(it -> littleSkin.getUrl().equals(it.getUrl()))) {
-                config().getAuthlibInjectorServers().add(0, littleSkin);
+            if (config().getAuthlibInjectorServers().stream().noneMatch(it -> paradise.getUrl().equals(it.getUrl()))) {
+                config().getAuthlibInjectorServers().add(0, paradise);
             }
 
-            config().setAddedLittleSkin(true);
+            config().setAddedParadise(true);
         }
 
         loadGlobalAccountStorages();
