@@ -53,7 +53,8 @@ public class HelpPage extends SpinnerPane {
         IconedTwoLineListItem docPane = new IconedTwoLineListItem();
         docPane.setTitle(i18n("help.doc"));
         docPane.setSubtitle(i18n("help.detail"));
-        docPane.setExternalLink(Metadata.HELP_URL);
+        // docPane.setExternalLink(Metadata.HELP_URL);
+        docPane.setExternalLink(Metadata.PARADISE_URL);
         ComponentList doc = new ComponentList();
         doc.getContent().setAll(docPane);
         content.getChildren().add(doc);
@@ -63,7 +64,8 @@ public class HelpPage extends SpinnerPane {
 
     private void loadHelp() {
         showSpinner();
-        Task.<List<HelpCategory>>supplyAsync(() -> HttpRequest.GET("https://docs.hmcl.net/index.json").getJson(new TypeToken<List<HelpCategory>>() {
+        // Task.<List<HelpCategory>>supplyAsync(() -> HttpRequest.GET("https://docs.hmcl.net/index.json").getJson(new TypeToken<List<HelpCategory>>() {
+        Task.<List<HelpCategory>>supplyAsync(() -> HttpRequest.GET("https://paradise.mahoutsukai.cn/api/tilty/config/json?key=paradise-hmcl-help").getJson(new TypeToken<List<HelpCategory>>() {
         }.getType()))
                 .thenAcceptAsync(Schedulers.javafx(), helpCategories -> {
                     for (HelpCategory category : helpCategories) {

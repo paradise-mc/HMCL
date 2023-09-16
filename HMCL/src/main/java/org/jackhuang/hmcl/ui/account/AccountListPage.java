@@ -87,7 +87,7 @@ public class AccountListPage extends DecoratorAnimatedPage implements DecoratorP
 
     private static class AccountListPageSkin extends DecoratorAnimatedPageSkin<AccountListPage> {
 
-        private final ObservableList<AdvancedListItem> authServerItems;
+        // private final ObservableList<AdvancedListItem> authServerItems;
 
         public AccountListPageSkin(AccountListPage skinnable) {
             super(skinnable);
@@ -132,55 +132,55 @@ public class AccountListPage extends DecoratorAnimatedPage implements DecoratorP
                     paradiseItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(paradise)));
                     boxMethods.getChildren().add(paradiseItem);
 
-                    VBox boxAuthServers = new VBox();
-                    authServerItems = MappedObservableList.create(skinnable.authServersProperty(), server -> {
-                        AdvancedListItem item = new AdvancedListItem();
-                        item.getStyleClass().add("navigation-drawer-item");
-                        item.setLeftGraphic(wrap(SVG.SERVER));
-                        item.setOnAction(e -> Controllers.dialog(new CreateAccountPane(server)));
+                    // VBox boxAuthServers = new VBox();
+                    // authServerItems = MappedObservableList.create(skinnable.authServersProperty(), server -> {
+                    //     AdvancedListItem item = new AdvancedListItem();
+                    //     item.getStyleClass().add("navigation-drawer-item");
+                    //     item.setLeftGraphic(wrap(SVG.SERVER));
+                    //     item.setOnAction(e -> Controllers.dialog(new CreateAccountPane(server)));
 
-                        JFXButton btnRemove = new JFXButton();
-                        btnRemove.setOnAction(e -> {
-                            skinnable.authServersProperty().remove(server);
-                            e.consume();
-                        });
-                        btnRemove.getStyleClass().add("toggle-icon4");
-                        btnRemove.setGraphic(SVG.CLOSE.createIcon(Theme.blackFill(), 14, 14));
-                        item.setRightGraphic(btnRemove);
+                    //     JFXButton btnRemove = new JFXButton();
+                    //     btnRemove.setOnAction(e -> {
+                    //         skinnable.authServersProperty().remove(server);
+                    //         e.consume();
+                    //     });
+                    //     btnRemove.getStyleClass().add("toggle-icon4");
+                    //     btnRemove.setGraphic(SVG.CLOSE.createIcon(Theme.blackFill(), 14, 14));
+                    //     item.setRightGraphic(btnRemove);
 
-                        ObservableValue<String> title = BindingMapping.of(server, AuthlibInjectorServer::getName);
-                        item.titleProperty().bind(title);
-                        String host = "";
-                        try {
-                            host = URI.create(server.getUrl()).getHost();
-                        } catch (IllegalArgumentException e) {
-                            LOG.log(Level.WARNING, "Unparsable authlib-injector server url " + server.getUrl(), e);
-                        }
-                        item.subtitleProperty().set(host);
-                        Tooltip tooltip = new Tooltip();
-                        tooltip.textProperty().bind(Bindings.format("%s (%s)", title, server.getUrl()));
-                        FXUtils.installFastTooltip(item, tooltip);
+                    //     ObservableValue<String> title = BindingMapping.of(server, AuthlibInjectorServer::getName);
+                    //     item.titleProperty().bind(title);
+                    //     String host = "";
+                    //     try {
+                    //         host = URI.create(server.getUrl()).getHost();
+                    //     } catch (IllegalArgumentException e) {
+                    //         LOG.log(Level.WARNING, "Unparsable authlib-injector server url " + server.getUrl(), e);
+                    //     }
+                    //     item.subtitleProperty().set(host);
+                    //     Tooltip tooltip = new Tooltip();
+                    //     tooltip.textProperty().bind(Bindings.format("%s (%s)", title, server.getUrl()));
+                    //     FXUtils.installFastTooltip(item, tooltip);
 
-                        return item;
-                    });
-                    Bindings.bindContent(boxAuthServers.getChildren(), authServerItems);
-                    boxMethods.getChildren().add(boxAuthServers);
+                    //     return item;
+                    // });
+                    // Bindings.bindContent(boxAuthServers.getChildren(), authServerItems);
+                    // boxMethods.getChildren().add(boxAuthServers);
                 }
 
-                AdvancedListItem addAuthServerItem = new AdvancedListItem();
-                {
-                    addAuthServerItem.getStyleClass().add("navigation-drawer-item");
-                    addAuthServerItem.setTitle(i18n("account.injector.add"));
-                    addAuthServerItem.setSubtitle(i18n("account.methods.authlib_injector"));
-                    addAuthServerItem.setActionButtonVisible(false);
-                    addAuthServerItem.setLeftGraphic(wrap(SVG.PLUS_CIRCLE_OUTLINE));
-                    addAuthServerItem.setOnAction(e -> Controllers.dialog(new AddAuthlibInjectorServerPane()));
-                    VBox.setMargin(addAuthServerItem, new Insets(0, 0, 12, 0));
-                }
+                // AdvancedListItem addAuthServerItem = new AdvancedListItem();
+                // {
+                //     addAuthServerItem.getStyleClass().add("navigation-drawer-item");
+                //     addAuthServerItem.setTitle(i18n("account.injector.add"));
+                //     addAuthServerItem.setSubtitle(i18n("account.methods.authlib_injector"));
+                //     addAuthServerItem.setActionButtonVisible(false);
+                //     addAuthServerItem.setLeftGraphic(wrap(SVG.PLUS_CIRCLE_OUTLINE));
+                //     addAuthServerItem.setOnAction(e -> Controllers.dialog(new AddAuthlibInjectorServerPane()));
+                //     VBox.setMargin(addAuthServerItem, new Insets(0, 0, 12, 0));
+                // }
 
                 ScrollPane scrollPane = new ScrollPane(boxMethods);
                 VBox.setVgrow(scrollPane, Priority.ALWAYS);
-                setLeft(scrollPane, addAuthServerItem);
+                setLeft(scrollPane);
             }
 
             ScrollPane scrollPane = new ScrollPane();

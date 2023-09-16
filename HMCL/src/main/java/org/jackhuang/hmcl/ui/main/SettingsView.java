@@ -67,40 +67,40 @@ public abstract class SettingsView extends StackPane {
             rootPane.setPadding(new Insets(32, 10, 32, 10));
             {
                 ComponentList settingsPane = new ComponentList();
-                {
-                    {
-                        StackPane sponsorPane = new StackPane();
-                        sponsorPane.setCursor(Cursor.HAND);
-                        sponsorPane.setOnMouseClicked(e -> onSponsor());
-                        sponsorPane.setPadding(new Insets(8, 0, 8, 0));
+                // {
+                //     {
+                //         StackPane sponsorPane = new StackPane();
+                //         sponsorPane.setCursor(Cursor.HAND);
+                //         sponsorPane.setOnMouseClicked(e -> onSponsor());
+                //         sponsorPane.setPadding(new Insets(8, 0, 8, 0));
 
-                        GridPane gridPane = new GridPane();
+                //         GridPane gridPane = new GridPane();
 
-                        ColumnConstraints col = new ColumnConstraints();
-                        col.setHgrow(Priority.SOMETIMES);
-                        col.setMaxWidth(Double.POSITIVE_INFINITY);
+                //         ColumnConstraints col = new ColumnConstraints();
+                //         col.setHgrow(Priority.SOMETIMES);
+                //         col.setMaxWidth(Double.POSITIVE_INFINITY);
 
-                        gridPane.getColumnConstraints().setAll(col);
+                //         gridPane.getColumnConstraints().setAll(col);
 
-                        RowConstraints row = new RowConstraints();
-                        row.setMinHeight(Double.NEGATIVE_INFINITY);
-                        row.setValignment(VPos.TOP);
-                        row.setVgrow(Priority.SOMETIMES);
-                        gridPane.getRowConstraints().setAll(row);
+                //         RowConstraints row = new RowConstraints();
+                //         row.setMinHeight(Double.NEGATIVE_INFINITY);
+                //         row.setValignment(VPos.TOP);
+                //         row.setVgrow(Priority.SOMETIMES);
+                //         gridPane.getRowConstraints().setAll(row);
 
-                        {
-                            Label label = new Label(i18n("sponsor.hmcl"));
-                            label.setWrapText(true);
-                            label.setTextAlignment(TextAlignment.JUSTIFY);
-                            GridPane.setRowIndex(label, 0);
-                            GridPane.setColumnIndex(label, 0);
-                            gridPane.getChildren().add(label);
-                        }
+                //         {
+                //             Label label = new Label(i18n("sponsor.hmcl"));
+                //             label.setWrapText(true);
+                //             label.setTextAlignment(TextAlignment.JUSTIFY);
+                //             GridPane.setRowIndex(label, 0);
+                //             GridPane.setColumnIndex(label, 0);
+                //             gridPane.getChildren().add(label);
+                //         }
 
-                        sponsorPane.getChildren().setAll(gridPane);
-                        settingsPane.getContent().add(sponsorPane);
-                    }
-                }
+                //         sponsorPane.getChildren().setAll(gridPane);
+                //         settingsPane.getContent().add(sponsorPane);
+                //     }
+                // }
 
                 {
                     ComponentSublist updatePane = new ComponentSublist();

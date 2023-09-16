@@ -153,17 +153,17 @@ public class RootPage extends DecoratorAnimatedPage implements DecoratorPage {
             runInFX(() -> FXUtils.installFastTooltip(downloadItem, i18n("download.hint")));
 
             // fifth item in left sidebar
-            AdvancedListItem multiplayerItem = new AdvancedListItem();
-            multiplayerItem.setLeftGraphic(wrap(SVG.LAN));
-            multiplayerItem.setActionButtonVisible(false);
-            multiplayerItem.setTitle(i18n("multiplayer"));
-            JFXHyperlink link = new JFXHyperlink(i18n("multiplayer.hint.details"));
-            link.setExternalLink("https://hmcl.huangyuhui.net/api/redirect/multiplayer-migrate");
-            multiplayerItem.setOnAction(e -> Controllers.dialog(
-                    new MessageDialogPane.Builder(i18n("multiplayer.hint"), null, MessageDialogPane.MessageType.INFO)
-                            .addAction(link)
-                            .ok(null)
-                            .build()));
+            // AdvancedListItem multiplayerItem = new AdvancedListItem();
+            // multiplayerItem.setLeftGraphic(wrap(SVG.LAN));
+            // multiplayerItem.setActionButtonVisible(false);
+            // multiplayerItem.setTitle(i18n("multiplayer"));
+            // JFXHyperlink link = new JFXHyperlink(i18n("multiplayer.hint.details"));
+            // link.setExternalLink("https://hmcl.huangyuhui.net/api/redirect/multiplayer-migrate");
+            // multiplayerItem.setOnAction(e -> Controllers.dialog(
+            //         new MessageDialogPane.Builder(i18n("multiplayer.hint"), null, MessageDialogPane.MessageType.INFO)
+            //                 .addAction(link)
+            //                 .ok(null)
+            //                 .build()));
 
             // sixth item in left sidebar
             AdvancedListItem launcherSettingsItem = new AdvancedListItem();
@@ -181,7 +181,7 @@ public class RootPage extends DecoratorAnimatedPage implements DecoratorPage {
                     .add(gameItem)
                     .add(downloadItem)
                     .startCategory(i18n("settings.launcher.general").toUpperCase(Locale.ROOT))
-                    .add(multiplayerItem)
+                    // .add(multiplayerItem)
                     .add(launcherSettingsItem);
 
             // the root page, with the sidebar in left, navigator in center.
