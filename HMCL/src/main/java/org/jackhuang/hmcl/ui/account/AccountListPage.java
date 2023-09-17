@@ -18,6 +18,7 @@
 package org.jackhuang.hmcl.ui.account;
 
 import com.jfoenix.controls.JFXButton;
+import java.io.IOException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
@@ -88,6 +89,7 @@ public class AccountListPage extends DecoratorAnimatedPage implements DecoratorP
     private static class AccountListPageSkin extends DecoratorAnimatedPageSkin<AccountListPage> {
 
         // private final ObservableList<AdvancedListItem> authServerItems;
+        private AuthlibInjectorServer server;
 
         public AccountListPageSkin(AccountListPage skinnable) {
             super(skinnable);
@@ -123,13 +125,19 @@ public class AccountListPage extends DecoratorAnimatedPage implements DecoratorP
 //                    microsoftItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(Accounts.FACTORY_MICROSOFT)));
 //                    boxMethods.getChildren().add(microsoftItem);
 
-                    AuthlibInjectorServer paradise = new AuthlibInjectorServer("https://paradise.mahoutsukai.cn/api/paradise/yggdrasil/");
+                    try {
+                        AuthlibInjectorServer paradise = AuthlibInjectorServer.locateServer("https://paradise.mahoutsukai.cn/api/paradise/yggdrasil/");
+                        this.server = paradise;
+                    } catch (IOException e) {
+                        this.server = null;
+                    }
+
                     AdvancedListItem paradiseItem = new AdvancedListItem();
                     paradiseItem.getStyleClass().add("navigation-drawer-item");
                     paradiseItem.setActionButtonVisible(false);
                     paradiseItem.setTitle(i18n("account.skin.type.paradise"));
                     paradiseItem.setLeftGraphic(wrap(SVG.MICROSOFT));
-                    paradiseItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(paradise)));
+                    paradiseItem.setOnAction(e -> Controllers.dialog(new CreateAccountPane(this.server)));
                     boxMethods.getChildren().add(paradiseItem);
 
                     // VBox boxAuthServers = new VBox();

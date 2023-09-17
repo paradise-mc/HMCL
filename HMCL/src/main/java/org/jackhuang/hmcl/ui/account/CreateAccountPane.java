@@ -19,6 +19,7 @@ package org.jackhuang.hmcl.ui.account;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.base.ValidatorBase;
+import java.io.IOException;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.binding.BooleanBinding;
@@ -466,8 +467,12 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
                 // setHalignment(lblServers, HPos.LEFT);
                 // add(lblServers, 0, rowIndex);
 
-                AuthlibInjectorServer paradise = new AuthlibInjectorServer("https://paradise.mahoutsukai.cn/api/paradise/yggdrasil/");
-                this.server = paradise;
+                try {
+                    AuthlibInjectorServer paradise = AuthlibInjectorServer.locateServer("https://paradise.mahoutsukai.cn/api/paradise/yggdrasil/");
+                    this.server = paradise;
+                } catch (IOException e) {
+                    this.server = null;
+                }
 
                 // cboServers = new JFXComboBox<>();
                 // cboServers.setCellFactory(jfxListCellFactory(server -> new TwoLineListItem(server.getName(), server.getUrl())));
@@ -485,13 +490,22 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
                 // HBox.setMargin(cboServers, new Insets(0, 10, 0, 0));
                 // cboServers.setMaxWidth(Double.MAX_VALUE);
 
-                // HBox linksContainer = new HBox();
-                // linksContainer.setAlignment(Pos.CENTER);
+                Label lblServers = new Label(i18n("account.injector.server"));
+                setHalignment(lblServers, HPos.LEFT);
+                add(lblServers, 0, rowIndex);
+
+                Label lblServerName = new Label(this.server.getName());
+                lblServerName.setMaxWidth(Double.MAX_VALUE);
+                HBox.setHgrow(lblServerName, Priority.ALWAYS);
+
+                HBox linksContainer = new HBox();
+                linksContainer.setAlignment(Pos.CENTER);
                 // onChangeAndOperate(cboServers.valueProperty(), server -> {
                 //     this.server = server;
                 //     linksContainer.getChildren().setAll(createHyperlinks(server));
                 // });
-                // linksContainer.setMinWidth(USE_PREF_SIZE);
+                linksContainer.getChildren().setAll(createHyperlinks(this.server));
+                linksContainer.setMinWidth(USE_PREF_SIZE);
 
                 // JFXButton btnAddServer = new JFXButton();
                 // btnAddServer.setGraphic(SVG.PLUS.createIcon(Theme.blackFill(), 20, 20));
@@ -501,9 +515,11 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
                 // });
 
                 // HBox boxServers = new HBox(cboServers, linksContainer, btnAddServer);
-                // add(boxServers, 1, rowIndex);
+                HBox boxServers = new HBox(lblServerName, linksContainer);
+                boxServers.setAlignment(Pos.CENTER_LEFT);
+                add(boxServers, 1, rowIndex);
 
-                // rowIndex++;
+                rowIndex++;
             }
 
             if (factory.getLoginType().requiresUsername) {
