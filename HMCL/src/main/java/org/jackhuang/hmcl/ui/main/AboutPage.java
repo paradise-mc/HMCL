@@ -36,7 +36,7 @@ public class AboutPage extends StackPane {
         {
             IconedTwoLineListItem launcher = new IconedTwoLineListItem();
             launcher.setImage(new Image("/assets/img/craft_table.png"));
-            launcher.setTitle("Hello Minecraft! Launcher");
+            launcher.setTitle("Bird of Paradise Launcher");
             launcher.setSubtitle(Metadata.VERSION);
             launcher.setExternalLink("https://hmcl.huangyuhui.net");
 
