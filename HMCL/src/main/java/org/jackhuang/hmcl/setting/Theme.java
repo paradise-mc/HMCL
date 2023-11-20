@@ -43,7 +43,7 @@ import static org.jackhuang.hmcl.setting.ConfigHolder.config;
 
 @JsonAdapter(Theme.TypeAdapter.class)
 public class Theme {
-    public static final Theme BLUE = new Theme("blue", "#5C6BC0");
+    public static final Theme PURPLE = new Theme("purple", "#9C27B0");
     public static final Color BLACK = Color.web("#292929");
     public static final Color[] SUGGESTED_COLORS = new Color[]{
             Color.web("#3D6DA3"), // blue
@@ -84,7 +84,7 @@ public class Theme {
 
     public static Theme getTheme() {
         Theme theme = config().getTheme();
-        return theme == null ? BLUE : theme;
+        return theme == null ? PURPLE : theme;
     }
 
     private final Color paint;
@@ -118,11 +118,11 @@ public class Theme {
     }
 
     public String[] getStylesheets(String overrideFontFamily) {
-        String css = "/assets/css/blue.css";
+        String css = "/assets/css/purple.css";
 
         String fontFamily = System.getProperty("hmcl.font.override", overrideFontFamily);
 
-        if (fontFamily != null || !this.color.equalsIgnoreCase(BLUE.color)) {
+        if (fontFamily != null || !this.color.equalsIgnoreCase(PURPLE.color)) {
             Color textFill = getForegroundColor();
             try {
                 File temp = File.createTempFile("hmcl", ".css");
@@ -139,7 +139,7 @@ public class Theme {
                 temp.deleteOnExit();
                 css = temp.toURI().toString();
             } catch (IOException | NullPointerException e) {
-                Logging.LOG.log(Level.SEVERE, "Unable to create theme stylesheet. Fallback to blue theme.", e);
+                Logging.LOG.log(Level.SEVERE, "Unable to create theme stylesheet. Fallback to purple theme.", e);
             }
         }
 
@@ -164,8 +164,8 @@ public class Theme {
         else {
             String color = null;
             switch (name.toLowerCase(Locale.ROOT)) {
-                case "blue":
-                    return Optional.of(BLUE);
+                case "purple":
+                    return Optional.of(PURPLE);
                 case "darker_blue":
                     color = "#283593";
                     break;
@@ -175,8 +175,8 @@ public class Theme {
                 case "orange":
                     color = "#E67E22";
                     break;
-                case "purple":
-                    color = "#9C27B0";
+                case "blue":
+                    color = "#3D6DA3";
                     break;
                 case "red":
                     color = "#F44336";
@@ -220,7 +220,7 @@ public class Theme {
 
         @Override
         public Theme read(JsonReader in) throws IOException {
-            return getTheme(in.nextString()).orElse(Theme.BLUE);
+            return getTheme(in.nextString()).orElse(Theme.PURPLE);
         }
     }
 }

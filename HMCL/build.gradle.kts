@@ -182,7 +182,7 @@ tasks.processResources {
     from("build/compiled-resources")
 
     convertToBSS("assets/css/root.css")
-    convertToBSS("assets/css/blue.css")
+    convertToBSS("assets/css/purple.css")
 
     into("META-INF/versions/11") {
         from(sourceSets["java11"].output)
