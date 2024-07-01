@@ -37,7 +37,7 @@ public abstract class VersionList<T extends RemoteVersion> {
      * key: game version.
      * values: corresponding remote versions.
      */
-    protected final SimpleMultimap<String, T> versions = new SimpleMultimap<String, T>(HashMap::new, TreeSet::new);
+    protected final SimpleMultimap<String, T, TreeSet<T>> versions = new SimpleMultimap<>(HashMap::new, TreeSet::new);
 
     /**
      * True if the version list has been loaded.
@@ -131,9 +131,14 @@ public abstract class VersionList<T extends RemoteVersion> {
         lock.readLock().lock();
         try {
             T result = null;
-            for (T it : versions.get(gameVersion))
+            TreeSet<T> remoteVersions = versions.get(gameVersion);
+            for (T it : remoteVersions)
                 if (remoteVersion.equals(it.getSelfVersion()))
                     result = it;
+            if (result == null)
+                for (T it : remoteVersions)
+                    if (remoteVersion.equals(it.getFullVersion()))
+                        result = it;
             return Optional.ofNullable(result);
         } finally {
             lock.readLock().unlock();

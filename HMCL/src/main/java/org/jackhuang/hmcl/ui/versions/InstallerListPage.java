@@ -30,7 +30,6 @@ import org.jackhuang.hmcl.task.TaskExecutor;
 import org.jackhuang.hmcl.task.TaskListener;
 import org.jackhuang.hmcl.ui.*;
 import org.jackhuang.hmcl.ui.download.UpdateInstallerWizardProvider;
-import org.jackhuang.hmcl.util.Lang;
 import org.jackhuang.hmcl.util.TaskCancellationAction;
 import org.jackhuang.hmcl.util.io.FileUtils;
 
@@ -72,7 +71,7 @@ public class InstallerListPage extends ListPageBase<InstallerItem> implements Ve
         CompletableFuture.supplyAsync(() -> {
             gameVersion = profile.getRepository().getGameVersion(version).orElse(null);
 
-            return LibraryAnalyzer.analyze(profile.getRepository().getResolvedPreservingPatchesVersion(versionId));
+            return LibraryAnalyzer.analyze(profile.getRepository().getResolvedPreservingPatchesVersion(versionId), gameVersion);
         }).thenAcceptAsync(analyzer -> {
             Function<String, Runnable> removeAction = libraryId -> () -> {
                 profile.getDependency().removeLibraryAsync(version, libraryId)
@@ -84,19 +83,21 @@ public class InstallerListPage extends ListPageBase<InstallerItem> implements Ve
 
             itemsProperty().clear();
 
-            InstallerItem.InstallerItemGroup group = new InstallerItem.InstallerItemGroup();
+            InstallerItem.InstallerItemGroup group = new InstallerItem.InstallerItemGroup(gameVersion);
 
-            // Conventional libraries: game, fabric, forge, liteloader, optifine
+            // Conventional libraries: game, fabric, forge, neoforge, liteloader, optifine
             for (InstallerItem installerItem : group.getLibraries()) {
                 String libraryId = installerItem.getLibraryId();
                 String libraryVersion = analyzer.getVersion(libraryId).orElse(null);
+                boolean libraryConfigurable = libraryVersion != null && analyzer.getLibraryStatus(libraryId) == LibraryAnalyzer.LibraryMark.LibraryStatus.CLEAR;
+
                 installerItem.libraryVersion.set(libraryVersion);
-                installerItem.upgradable.set(libraryVersion != null);
+                installerItem.upgradable.set(libraryConfigurable);
                 installerItem.installable.set(true);
                 installerItem.action.set(e -> {
                     Controllers.getDecorator().startWizard(new UpdateInstallerWizardProvider(profile, gameVersion, version, libraryId, libraryVersion));
                 });
-                boolean removable = !"game".equals(libraryId) && libraryVersion != null;
+                boolean removable = !LibraryAnalyzer.LibraryType.MINECRAFT.getPatchId().equals(libraryId) && libraryConfigurable;
                 installerItem.removable.set(removable);
                 if (removable) {
                     Runnable action = removeAction.apply(libraryId);
@@ -119,16 +120,9 @@ public class InstallerListPage extends ListPageBase<InstallerItem> implements Ve
                 InstallerItem installerItem = new InstallerItem(libraryId);
                 installerItem.libraryVersion.set(libraryVersion);
                 installerItem.installable.set(false);
-                installerItem.upgradable.bind(installerItem.installable);
+                installerItem.upgradable.set(false);
                 installerItem.removable.set(true);
                 installerItem.removeAction.set(e -> action.run());
-
-                if (libraryVersion != null && Lang.test(() -> profile.getDependency().getVersionList(libraryId))) {
-                    installerItem.installable.set(true);
-                    installerItem.action.set(e -> {
-                        Controllers.getDecorator().startWizard(new UpdateInstallerWizardProvider(profile, gameVersion, version, libraryId, libraryVersion));
-                    });
-                }
 
                 itemsProperty().add(installerItem);
             }
@@ -175,7 +169,8 @@ public class InstallerListPage extends ListPageBase<InstallerItem> implements Ve
         @Override
         protected List<Node> initializeToolbar(InstallerListPage skinnable) {
             return Collections.singletonList(
-                    createToolbarButton2(i18n("install.installer.install_offline"), SVG.PLUS, skinnable::installOffline));
+                    createToolbarButton2(i18n("install.installer.install_offline"), SVG.PLUS, skinnable::installOffline)
+            );
         }
     }
 }

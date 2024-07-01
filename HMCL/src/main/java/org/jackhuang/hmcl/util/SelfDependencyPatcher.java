@@ -43,6 +43,7 @@ package org.jackhuang.hmcl.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.jackhuang.hmcl.Main;
 import org.jackhuang.hmcl.ui.SwingUtils;
 import org.jackhuang.hmcl.util.io.ChecksumMismatchException;
 import org.jackhuang.hmcl.util.io.IOUtils;
@@ -62,12 +63,11 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toSet;
 import static org.jackhuang.hmcl.Metadata.HMCL_DIRECTORY;
-import static org.jackhuang.hmcl.util.Logging.LOG;
+import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 import static org.jackhuang.hmcl.util.i18n.I18n.i18n;
 import static org.jackhuang.hmcl.util.platform.JavaVersion.CURRENT_JAVA;
 
@@ -88,14 +88,14 @@ public final class SelfDependencyPatcher {
         final String customUrl = System.getProperty("hmcl.openjfx.repo");
         if (customUrl == null) {
             if (System.getProperty("user.country", "").equalsIgnoreCase("CN")) {
-                defaultRepository = Repository.ALIYUN_MIRROR;
+                defaultRepository = Repository.TENCENTCLOUD_MIRROR;
             } else {
                 defaultRepository = Repository.MAVEN_CENTRAL;
             }
-            repositories = Collections.unmodifiableList(Arrays.asList(Repository.MAVEN_CENTRAL, Repository.ALIYUN_MIRROR));
+            repositories = Collections.unmodifiableList(Arrays.asList(Repository.MAVEN_CENTRAL, Repository.TENCENTCLOUD_MIRROR));
         } else {
             defaultRepository = new Repository(String.format(i18n("repositories.custom"), customUrl), customUrl);
-            repositories = Collections.unmodifiableList(Arrays.asList(Repository.MAVEN_CENTRAL, Repository.ALIYUN_MIRROR, defaultRepository));
+            repositories = Collections.unmodifiableList(Arrays.asList(Repository.MAVEN_CENTRAL, Repository.TENCENTCLOUD_MIRROR, defaultRepository));
         }
     }
 
@@ -121,7 +121,7 @@ public final class SelfDependencyPatcher {
                 Class.forName("netscape.javascript.JSObject", false, classLoader);
                 Class.forName("org.w3c.dom.html.HTMLDocument", false, classLoader);
             } catch (Throwable e) {
-                LOG.log(Level.WARNING, "Disable javafx.web because JRE is incomplete", e);
+                LOG.warning("Disable javafx.web because JRE is incomplete", e);
                 dependencies.removeIf(it -> "javafx.web".equals(it.module) || "javafx.media".equals(it.module));
             }
 
@@ -150,7 +150,7 @@ public final class SelfDependencyPatcher {
 
     private static final class Repository {
         public static final Repository MAVEN_CENTRAL = new Repository(i18n("repositories.maven_central"), "https://repo1.maven.org/maven2");
-        public static final Repository ALIYUN_MIRROR = new Repository(i18n("repositories.aliyun_mirror"), "https://maven.aliyun.com/repository/central");
+        public static final Repository TENCENTCLOUD_MIRROR = new Repository(i18n("repositories.tencentcloud_mirror"), "https://mirrors.cloud.tencent.com/nexus/repository/maven-public");
 
         private final String name;
         private final String url;
@@ -250,7 +250,7 @@ public final class SelfDependencyPatcher {
             }
         } else {
             LOG.info("User choose not to download JavaFX");
-            System.exit(0);
+            Main.exit(0);
         }
         throw new AssertionError();
     }

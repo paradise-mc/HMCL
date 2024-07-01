@@ -43,17 +43,18 @@ import org.jackhuang.hmcl.util.versioning.VersionNumber;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.jackhuang.hmcl.setting.ConfigHolder.config;
-import static org.jackhuang.hmcl.ui.FXUtils.newImage;
-import static org.jackhuang.hmcl.util.Logging.LOG;
+import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 import static org.jackhuang.hmcl.util.Pair.pair;
 
 public class HMCLGameRepository extends DefaultGameRepository {
@@ -102,7 +103,7 @@ public class HMCLGameRepository extends DefaultGameRepository {
     public Stream<Version> getDisplayVersions() {
         return getVersions().stream()
                 .filter(v -> !v.isHidden())
-                .sorted(Comparator.comparing((Version v) -> v.getReleaseTime() == null ? new Date(0L) : v.getReleaseTime())
+                .sorted(Comparator.comparing((Version v) -> Lang.requireNonNullElse(v.getReleaseTime(), Instant.EPOCH))
                         .thenComparing(v -> VersionNumber.asVersion(v.getId())));
     }
 
@@ -122,10 +123,10 @@ public class HMCLGameRepository extends DefaultGameRepository {
             if (!file.exists() && !versions.isEmpty())
                 FileUtils.writeText(file, PROFILE);
         } catch (IOException ex) {
-            LOG.log(Level.WARNING, "Unable to create launcher_profiles.json, Forge/LiteLoader installer will not work.", ex);
+            LOG.warning("Unable to create launcher_profiles.json, Forge/LiteLoader installer will not work.", ex);
         }
 
-        // https://github.com/huanghongxun/HMCL/issues/938
+        // https://github.com/HMCL-dev/HMCL/issues/938
         System.gc();
     }
 
@@ -257,40 +258,91 @@ public class HMCLGameRepository extends DefaultGameRepository {
             return vs;
     }
 
-    public File getVersionIconFile(String id) {
-        return new File(getVersionRoot(id), "icon.png");
+    public Optional<File> getVersionIconFile(String id) {
+        File root = getVersionRoot(id);
+
+        File iconFile = new File(root, "icon.png");
+        if (iconFile.exists()) {
+            return Optional.of(iconFile);
+        }
+
+        iconFile = new File(root, "icon.jpg");
+        if (iconFile.exists()) {
+            return Optional.of(iconFile);
+        }
+
+        iconFile = new File(root, "icon.bmp");
+        if (iconFile.exists()) {
+            return Optional.of(iconFile);
+        }
+
+        iconFile = new File(root, "icon.gif");
+        if (iconFile.exists()) {
+            return Optional.of(iconFile);
+        }
+
+        return Optional.empty();
+    }
+
+    public void setVersionIconFile(String id, File iconFile) throws IOException {
+        String ext = FileUtils.getExtension(iconFile).toLowerCase(Locale.ROOT);
+        if (!ext.equals("png") && !ext.equals("jpg") && !ext.equals("bmp") && !ext.equals("gif")) {
+            throw new IllegalArgumentException("Unsupported icon file: " + ext);
+        }
+
+        deleteIconFile(id);
+
+        FileUtils.copyFile(iconFile, new File(getVersionRoot(id), "icon." + ext));
+    }
+
+    public void deleteIconFile(String id) {
+        File root = getVersionRoot(id);
+
+        new File(root, "icon.png").delete();
+        new File(root, "icon.jpg").delete();
+        new File(root, "icon.bmp").delete();
+        new File(root, "icon.gif").delete();
     }
 
     public Image getVersionIconImage(String id) {
         if (id == null || !isLoaded())
-            return newImage("/assets/img/grass.png");
+            return VersionIconType.DEFAULT.getIcon();
 
         VersionSetting vs = getLocalVersionSettingOrCreate(id);
-        VersionIconType iconType = Optional.ofNullable(vs).map(VersionSetting::getVersionIcon).orElse(VersionIconType.DEFAULT);
+        VersionIconType iconType = vs != null ? Lang.requireNonNullElse(vs.getVersionIcon(), VersionIconType.DEFAULT) : VersionIconType.DEFAULT;
 
         if (iconType == VersionIconType.DEFAULT) {
             Version version = getVersion(id).resolve(this);
-            File iconFile = getVersionIconFile(id);
-            if (iconFile.exists())
-                return new Image("file:" + iconFile.getAbsolutePath());
-            else if (LibraryAnalyzer.isModded(this, version)) {
-                LibraryAnalyzer libraryAnalyzer = LibraryAnalyzer.analyze(version);
+            Optional<File> iconFile = getVersionIconFile(id);
+            if (iconFile.isPresent()) {
+                try (InputStream inputStream = new FileInputStream(iconFile.get())) {
+                    return new Image(inputStream);
+                } catch (IOException e) {
+                    LOG.warning("Failed to load version icon of " + id, e);
+                }
+            }
+
+            if (LibraryAnalyzer.isModded(this, version)) {
+                LibraryAnalyzer libraryAnalyzer = LibraryAnalyzer.analyze(version, null);
                 if (libraryAnalyzer.has(LibraryAnalyzer.LibraryType.FABRIC))
-                    return newImage("/assets/img/fabric.png");
+                    return VersionIconType.FABRIC.getIcon();
                 else if (libraryAnalyzer.has(LibraryAnalyzer.LibraryType.FORGE))
-                    return newImage("/assets/img/forge.png");
+                    return VersionIconType.FORGE.getIcon();
+                else if (libraryAnalyzer.has(LibraryAnalyzer.LibraryType.NEO_FORGE))
+                    return VersionIconType.NEO_FORGE.getIcon();
                 else if (libraryAnalyzer.has(LibraryAnalyzer.LibraryType.QUILT))
-                    return newImage("/assets/img/quilt.png");
+                    return VersionIconType.QUILT.getIcon();
                 else if (libraryAnalyzer.has(LibraryAnalyzer.LibraryType.OPTIFINE))
-                    return newImage("/assets/img/command.png");
+                    return VersionIconType.OPTIFINE.getIcon();
                 else if (libraryAnalyzer.has(LibraryAnalyzer.LibraryType.LITELOADER))
-                    return newImage("/assets/img/chicken.png");
+                    return VersionIconType.CHICKEN.getIcon();
                 else
-                    return newImage("/assets/img/furnace.png");
-            } else
-                return newImage("/assets/img/grass.png");
+                    return VersionIconType.FURNACE.getIcon();
+            }
+
+            return VersionIconType.DEFAULT.getIcon();
         } else {
-            return newImage(iconType.getResourceUrl());
+            return iconType.getIcon();
         }
     }
 
@@ -305,7 +357,7 @@ public class HMCLGameRepository extends DefaultGameRepository {
             FileUtils.writeText(file, GSON.toJson(localVersionSettings.get(id)));
             return true;
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, "Unable to save version setting of " + id, e);
+            LOG.error("Unable to save version setting of " + id, e);
             return false;
         }
     }

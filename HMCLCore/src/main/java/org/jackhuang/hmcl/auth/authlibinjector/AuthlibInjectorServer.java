@@ -17,12 +17,9 @@
  */
 package org.jackhuang.hmcl.auth.authlibinjector;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyMap;
 import static org.jackhuang.hmcl.util.Lang.tryCast;
-import static org.jackhuang.hmcl.util.Logging.LOG;
-import static org.jackhuang.hmcl.util.io.IOUtils.readFullyAsByteArray;
-import static org.jackhuang.hmcl.util.io.IOUtils.readFullyWithoutClosing;
+import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -32,9 +29,10 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 
 import org.jackhuang.hmcl.auth.yggdrasil.YggdrasilService;
+import org.jackhuang.hmcl.util.io.HttpRequest;
+import org.jackhuang.hmcl.util.io.IOUtils;
 import org.jackhuang.hmcl.util.javafx.ObservableHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,6 +59,7 @@ public class AuthlibInjectorServer implements Observable {
         try {
             url = addHttpsIfMissing(url);
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestProperty("Accept-Language", Locale.getDefault().toLanguageTag());
 
             String ali = conn.getHeaderField("x-authlib-injector-api-location");
             if (ali != null) {
@@ -69,6 +68,7 @@ public class AuthlibInjectorServer implements Observable {
                     conn.disconnect();
                     url = absoluteAli.toString();
                     conn = (HttpURLConnection) absoluteAli.openConnection();
+                    conn.setRequestProperty("Accept-Language", Locale.getDefault().toLanguageTag());
                 }
             }
 
@@ -77,7 +77,7 @@ public class AuthlibInjectorServer implements Observable {
 
             try {
                 AuthlibInjectorServer server = new AuthlibInjectorServer(url);
-                server.refreshMetadata(readFullyWithoutClosing(conn.getInputStream()));
+                server.refreshMetadata(IOUtils.readFullyAsStringWithClosing(conn.getInputStream()));
                 return server;
             } finally {
                 conn.disconnect();
@@ -159,12 +159,11 @@ public class AuthlibInjectorServer implements Observable {
     }
 
     public void refreshMetadata() throws IOException {
-        refreshMetadata(readFullyAsByteArray(new URL(url).openStream()));
+        refreshMetadata(HttpRequest.GET(url).getString());
     }
 
-    private void refreshMetadata(byte[] rawResponse) throws IOException {
+    private void refreshMetadata(String text) throws IOException {
         long timestamp = System.currentTimeMillis();
-        String text = new String(rawResponse, UTF_8);
         try {
             setMetadataResponse(text, timestamp);
         } catch (JsonParseException e) {
@@ -254,7 +253,7 @@ public class AuthlibInjectorServer implements Observable {
                 try {
                     instance.setMetadataResponse(jsonObj.get("metadataResponse").getAsString(), jsonObj.get("metadataTimestamp").getAsLong());
                 } catch (JsonParseException e) {
-                    LOG.log(Level.WARNING, "Ignoring malformed metadata response cache: " + jsonObj.get("metadataResponse"), e);
+                    LOG.warning("Ignoring malformed metadata response cache: " + jsonObj.get("metadataResponse"), e);
                 }
             }
             return instance;

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.jackhuang.hmcl.util.Logging.LOG;
+import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 
 public final class SystemUtils {
     private SystemUtils() {}
@@ -41,8 +41,12 @@ public final class SystemUtils {
         return managedProcess.getProcess().waitFor();
     }
 
+    public static boolean supportJVMAttachment() {
+        return JavaVersion.CURRENT_JAVA.getParsedVersion() >= 9
+                && Thread.currentThread().getContextClassLoader().getResource("com/sun/tools/attach/VirtualMachine.class") != null;
+    }
+
     private static void onLogLine(String log) {
         LOG.info(log);
     }
-
 }

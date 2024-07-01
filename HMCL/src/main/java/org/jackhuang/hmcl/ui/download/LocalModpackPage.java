@@ -42,10 +42,9 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 
 import static org.jackhuang.hmcl.util.Lang.tryCast;
-import static org.jackhuang.hmcl.util.Logging.LOG;
+import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 import static org.jackhuang.hmcl.util.i18n.I18n.i18n;
 
 public final class LocalModpackPage extends ModpackPage {
@@ -111,7 +110,7 @@ public final class LocalModpackPage extends ModpackPage {
                         lblModpackLocation.setText(selectedFile.getAbsolutePath());
 
                         if (!name.isPresent()) {
-                            // trim: https://github.com/huanghongxun/HMCL/issues/962
+                            // trim: https://github.com/HMCL-dev/HMCL/issues/962
                             txtModpackName.setText(FileUtils.getNameWithoutExtension(selectedFile));
                         }
 
@@ -121,7 +120,7 @@ public final class LocalModpackPage extends ModpackPage {
 
                         controller.getSettings().put(MODPACK_MANUALLY_CREATED, true);
                     } else if (exception != null) {
-                        LOG.log(Level.WARNING, "Failed to read modpack manifest", exception);
+                        LOG.warning("Failed to read modpack manifest", exception);
                         Controllers.dialog(i18n("modpack.task.install.error"), i18n("message.error"), MessageDialogPane.MessageType.ERROR);
                         Platform.runLater(controller::onEnd);
                     } else {
@@ -134,7 +133,7 @@ public final class LocalModpackPage extends ModpackPage {
                         lblModpackLocation.setText(selectedFile.getAbsolutePath());
 
                         if (!name.isPresent()) {
-                            // trim: https://github.com/huanghongxun/HMCL/issues/962
+                            // trim: https://github.com/HMCL-dev/HMCL/issues/962
                             txtModpackName.setText(manifest.getName().trim());
                         }
                     }
