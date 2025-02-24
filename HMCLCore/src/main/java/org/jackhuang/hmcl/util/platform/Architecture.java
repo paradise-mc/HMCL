@@ -85,8 +85,6 @@ public enum Architecture {
         return this == X86 || this == X86_64;
     }
 
-    public static final String CURRENT_ARCH_NAME;
-    public static final String SYSTEM_ARCH_NAME;
     public static final Architecture CURRENT_ARCH;
     public static final Architecture SYSTEM_ARCH;
 
@@ -104,6 +102,7 @@ public enum Architecture {
             case "ia32e":
             case "em64t":
             case "x64":
+            case "intel64":
                 return X86_64;
             case "x8632":
             case "x86-32":
@@ -176,6 +175,9 @@ public enum Architecture {
                     return LOONGARCH64_OW;
                 return LOONGARCH64;
             }
+            case "loongarch64_ow": {
+                return LOONGARCH64_OW;
+            }
             default:
                 if (value.startsWith("armv7")) {
                     return ARM32;
@@ -188,8 +190,7 @@ public enum Architecture {
     }
 
     static {
-        CURRENT_ARCH_NAME = System.getProperty("os.arch");
-        CURRENT_ARCH = parseArchName(CURRENT_ARCH_NAME);
+        CURRENT_ARCH = parseArchName(System.getProperty("os.arch"));
 
         String sysArchName = null;
         if (OperatingSystem.CURRENT_OS == OperatingSystem.WINDOWS) {
@@ -215,12 +216,6 @@ public enum Architecture {
         }
 
         Architecture sysArch = parseArchName(sysArchName);
-        if (sysArch == UNKNOWN) {
-            SYSTEM_ARCH_NAME = CURRENT_ARCH_NAME;
-            SYSTEM_ARCH = CURRENT_ARCH;
-        } else {
-            SYSTEM_ARCH_NAME = sysArchName;
-            SYSTEM_ARCH = sysArch;
-        }
+        SYSTEM_ARCH = sysArch == UNKNOWN ? CURRENT_ARCH : sysArch;
     }
 }

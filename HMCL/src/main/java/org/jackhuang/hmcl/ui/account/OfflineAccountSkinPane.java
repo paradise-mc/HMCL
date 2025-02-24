@@ -28,9 +28,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import moe.mickey.minecraft.skin.fx.SkinCanvas;
-import moe.mickey.minecraft.skin.fx.animation.SkinAniRunning;
-import moe.mickey.minecraft.skin.fx.animation.SkinAniWavingArms;
+import org.jackhuang.hmcl.ui.skin.SkinCanvas;
+import org.jackhuang.hmcl.ui.skin.animation.SkinAniRunning;
+import org.jackhuang.hmcl.ui.skin.animation.SkinAniWavingArms;
 import org.jackhuang.hmcl.auth.offline.OfflineAccount;
 import org.jackhuang.hmcl.auth.offline.Skin;
 import org.jackhuang.hmcl.auth.yggdrasil.TextureModel;
@@ -108,8 +108,8 @@ public class OfflineAccountSkinPane extends StackPane {
 
         skinItem.loadChildren(Arrays.asList(
                 new MultiFileItem.Option<>(i18n("message.default"), Skin.Type.DEFAULT),
-                new MultiFileItem.Option<>("Steve", Skin.Type.STEVE),
-                new MultiFileItem.Option<>("Alex", Skin.Type.ALEX),
+                new MultiFileItem.Option<>(i18n("account.skin.type.steve"), Skin.Type.STEVE),
+                new MultiFileItem.Option<>(i18n("account.skin.type.alex"), Skin.Type.ALEX),
                 new MultiFileItem.Option<>(i18n("account.skin.type.local_file"), Skin.Type.LOCAL_FILE),
                 new MultiFileItem.Option<>("Paradise", Skin.Type.PARADISE),
                 new MultiFileItem.Option<>(i18n("account.skin.type.csl_api"), Skin.Type.CUSTOM_SKIN_LOADER_API)
@@ -201,6 +201,12 @@ public class OfflineAccountSkinPane extends StackPane {
     }
 
     private Skin getSkin() {
-        return new Skin(skinItem.getSelectedData(), cslApiField.getText(), modelCombobox.getValue(), skinSelector.getValue(), capeSelector.getValue());
+        Skin.Type type = skinItem.getSelectedData();
+        if (type == Skin.Type.LOCAL_FILE) {
+            return new Skin(type, cslApiField.getText(), modelCombobox.getValue(), skinSelector.getValue(), capeSelector.getValue());
+        } else {
+            String cslApi = type == Skin.Type.CUSTOM_SKIN_LOADER_API ? cslApiField.getText() : null;
+            return new Skin(type, cslApi, null, null, null);
+        }
     }
 }
