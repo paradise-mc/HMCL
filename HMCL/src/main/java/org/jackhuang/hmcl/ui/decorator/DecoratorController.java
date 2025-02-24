@@ -214,13 +214,8 @@ public class DecoratorController {
             if (image != null)
                 return image;
         }
-        if (!image.isPresent()) {
-            image = tryLoadImage(Paths.get("background.jpg"));
-        }
-        if (!image.isPresent()) {
-            image = tryLoadImage(Paths.get("background.gif"));
-        }
-        return image.orElseGet(() -> newBuiltinImage("/assets/img/background.png"));
+
+        return newBuiltinImage("/assets/img/background.png");
     }
 
     private @Nullable Image randomImageIn(Path imageDir) {
