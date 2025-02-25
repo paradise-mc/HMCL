@@ -46,14 +46,14 @@ import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 
 @JsonAdapter(Theme.TypeAdapter.class)
 public class Theme {
-    public static final Theme PURPLE = new Theme("purple", "#9C27B0");
+    public static final Theme PARADISE = new Theme("paradise", "#6C739C");
     public static final Color BLACK = Color.web("#292929");
     public static final Color[] SUGGESTED_COLORS = new Color[]{
             Color.web("#3D6DA3"), // blue
             Color.web("#283593"), // dark blue
             Color.web("#43A047"), // green
             Color.web("#E67E22"), // orange
-            Color.web("#9C27B0"), // purple
+            Color.web("#6C739C"), // gray
             Color.web("#B71C1C")  // red
     };
 
@@ -83,7 +83,7 @@ public class Theme {
 
     public static Theme getTheme() {
         Theme theme = config().getTheme();
-        return theme == null ? PURPLE : theme;
+        return theme == null ? PARADISE : theme;
     }
 
     private final Color paint;
@@ -164,7 +164,7 @@ public class Theme {
     }
 
     public String[] getStylesheets(String overrideFontFamily) {
-        String css = "/assets/css/purple.css";
+        String css = "/assets/css/paradise.css";
 
         String fontFamily = overrideFontFamily == null
                 ? System.getProperty("hmcl.font.override", System.getenv("HMCL_FONT"))
@@ -179,7 +179,7 @@ public class Theme {
             }
         }
 
-        if (fontFamily != null || !this.color.equalsIgnoreCase(PURPLE.color)) {
+        if (fontFamily != null || !this.color.equalsIgnoreCase(PARADISE.color)) {
             Color textFill = getForegroundColor();
 
             StringBuilder themeBuilder = new StringBuilder(512);
@@ -247,8 +247,8 @@ public class Theme {
         else {
             String color = null;
             switch (name.toLowerCase(Locale.ROOT)) {
-                case "purple":
-                    return Optional.of(PURPLE);
+                case "paradise":
+                    return Optional.of(PARADISE);
                 case "darker_blue":
                     color = "#283593";
                     break;
@@ -303,7 +303,7 @@ public class Theme {
 
         @Override
         public Theme read(JsonReader in) throws IOException {
-            return getTheme(in.nextString()).orElse(Theme.PURPLE);
+            return getTheme(in.nextString()).orElse(Theme.PARADISE);
         }
     }
 }
