@@ -154,28 +154,21 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
         }
 
         if (showMethodSwitcher) {
-            // TabControl.Tab<?>[] tabs = new TabControl.Tab[Accounts.FACTORIES.size()];
-            TabControl.Tab<?>[] tabs = new TabControl.Tab[2];
+            List<AccountFactory<?>> visibleFactories = new ArrayList<>(Accounts.FACTORIES);
+            visibleFactories.remove(Accounts.FACTORY_MICROSOFT);
+
+            TabControl.Tab<?>[] tabs = new TabControl.Tab[visibleFactories.size()];
             TabControl.Tab<?> selected = null;
-            // for (int i = 0; i < tabs.length; i++) {
-            //     AccountFactory<?> f = Accounts.FACTORIES.get(i);
-            //     tabs[i] = new TabControl.Tab<>(Accounts.getLoginType(f), Accounts.getLocalizedLoginTypeName(f));
-            //     tabs[i].setUserData(f);
-            //     if (factory == f) {
-            //         selected = tabs[i];
-            //     }
-            // }
-            AccountFactory<?> f1 = Accounts.FACTORIES.get(0);
-            tabs[0] = new TabControl.Tab<>(Accounts.getLoginType(f1), Accounts.getLocalizedLoginTypeName(f1));
-            tabs[0].setUserData(f1);
-            if (factory == f1) {
-                selected = tabs[0];
+            for (int i = 0; i < tabs.length; i++) {
+                AccountFactory<?> f = visibleFactories.get(i);
+                tabs[i] = new TabControl.Tab<>(Accounts.getLoginType(f), Accounts.getLocalizedLoginTypeName(f));
+                tabs[i].setUserData(f);
+                if (factory == f) {
+                    selected = tabs[i];
+                }
             }
-            AccountFactory<?> f2 = Accounts.FACTORIES.get(3);
-            tabs[1] = new TabControl.Tab<>(Accounts.getLoginType(f2), Accounts.getLocalizedLoginTypeName(f2));
-            tabs[1].setUserData(f2);
-            if (factory == f2) {
-                selected = tabs[1];
+            if (selected == null && tabs.length > 0) {
+                selected = tabs[0];
             }
 
             TabHeader tabHeader = new TabHeader(tabs);

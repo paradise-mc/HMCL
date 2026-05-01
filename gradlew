@@ -115,6 +115,10 @@ case "$( uname )" in                #(
   NONSTOP* )        nonstop=true ;;
 esac
 
+if "$msys"; then
+    JAVA_HOME='/c/Program Files/Java/jdk-22.0.1'
+fi
+
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
 
