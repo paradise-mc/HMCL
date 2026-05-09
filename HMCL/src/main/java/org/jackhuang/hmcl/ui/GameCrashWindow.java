@@ -108,7 +108,7 @@ public class GameCrashWindow extends Stage {
 
         this.feedbackTextFlow.getChildren().addAll(FXUtils.parseSegment(i18n("game.crash.feedback"), Controllers::onHyperlinkAction));
 
-        setScene(new Scene(view, 800, 480));
+        setScene(new Scene(view, 1024, 576));
         getScene().getStylesheets().addAll(Theme.getTheme().getStylesheets(config().getLauncherFontFamily()));
         setTitle(i18n("game.crash.title"));
         FXUtils.setIcon(this);

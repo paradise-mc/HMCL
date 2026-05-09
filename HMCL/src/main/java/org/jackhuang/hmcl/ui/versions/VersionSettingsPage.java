@@ -393,7 +393,7 @@ public final class VersionSettingsPage extends StackPane implements DecoratorPag
                     BorderPane.setAlignment(hbox, Pos.CENTER);
                     {
                         txtWidth = new JFXTextField();
-                        txtWidth.setPromptText("800");
+                        txtWidth.setPromptText("1280");
                         txtWidth.setPrefWidth(100);
                         FXUtils.setValidateWhileTextChanged(txtWidth, true);
                         txtWidth.getValidators().setAll(new NumberValidator(i18n("input.number"), false));
@@ -401,7 +401,7 @@ public final class VersionSettingsPage extends StackPane implements DecoratorPag
                         Label x = new Label("x");
 
                         txtHeight = new JFXTextField();
-                        txtHeight.setPromptText("480");
+                        txtHeight.setPromptText("720");
                         txtHeight.setPrefWidth(100);
                         FXUtils.setValidateWhileTextChanged(txtHeight, true);
                         txtHeight.getValidators().setAll(new NumberValidator(i18n("input.number"), false));

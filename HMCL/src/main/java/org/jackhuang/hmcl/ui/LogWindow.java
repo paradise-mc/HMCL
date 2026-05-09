@@ -91,7 +91,7 @@ public final class LogWindow extends Stage {
     public LogWindow(ManagedProcess gameProcess, CircularArrayList<Log> logs) {
         this.logs = logs;
         this.impl = new LogWindowImpl();
-        setScene(new Scene(impl, 800, 480));
+        setScene(new Scene(impl, 1024, 576));
         getScene().getStylesheets().addAll(Theme.getTheme().getStylesheets(config().getLauncherFontFamily()));
         setTitle(i18n("logwindow.title"));
         FXUtils.setIcon(this);
