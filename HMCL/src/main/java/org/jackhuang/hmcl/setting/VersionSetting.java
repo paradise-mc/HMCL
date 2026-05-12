@@ -512,14 +512,14 @@ public final class VersionSetting implements Cloneable, Observable {
         fullscreenProperty.set(fullscreen);
     }
 
-    private final IntegerProperty widthProperty = new SimpleIntegerProperty(this, "width", 854);
+    private final IntegerProperty widthProperty = new SimpleIntegerProperty(this, "width", 1280);
 
     public IntegerProperty widthProperty() {
         return widthProperty;
     }
 
     /**
-     * The width of Minecraft window, defaults 800.
+     * The width of Minecraft window, defaults 1280.
      * <p>
      * The field saves int value.
      * String type prevents unexpected value from JsonParseException.
@@ -533,14 +533,14 @@ public final class VersionSetting implements Cloneable, Observable {
         widthProperty.set(width);
     }
 
-    private final IntegerProperty heightProperty = new SimpleIntegerProperty(this, "height", 480);
+    private final IntegerProperty heightProperty = new SimpleIntegerProperty(this, "height", 720);
 
     public IntegerProperty heightProperty() {
         return heightProperty;
     }
 
     /**
-     * The height of Minecraft window, defaults 480.
+     * The height of Minecraft window, defaults 720.
      * <p>
      * The field saves int value.
      * String type prevents unexpected value from JsonParseException.

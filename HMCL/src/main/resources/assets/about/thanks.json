@@ -1,5 +1,11 @@
 [
   {
+    "image" : "/assets/img/tiltysola.png",
+    "title" : "缇尔蒂",
+    "subtitleLocalized" : "about.thanks_to.tiltysola.statement",
+    "externalLink" : "https://www.tiltysola.com"
+  },
+  {
     "image" : "/assets/img/yushijinhun.png",
     "title" : "yushijinhun",
     "subtitleLocalized" : "about.thanks_to.yushijinhun.statement",

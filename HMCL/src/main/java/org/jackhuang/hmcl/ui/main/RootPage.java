@@ -238,10 +238,8 @@ public class RootPage extends DecoratorAnimatedPage implements DecoratorPage {
                     .startCategory(i18n("settings.launcher.general").toUpperCase(Locale.ROOT))
                     .add(launcherSettingsItem)
                     .add(terracottaItem)
-                    .addNavigationDrawerItem(i18n("contact.chat"), SVG.CHAT, () -> {
-                        Controllers.getSettingsPage().showFeedback();
-                        Controllers.navigate(Controllers.getSettingsPage());
-                    });
+                    .addNavigationDrawerItem(i18n("paradise.website"), SVG.PUBLIC,
+                            () -> FXUtils.openLink(Metadata.PARADISE_WEBSITE_URL));
 
             // the root page, with the sidebar in left, navigator in center.
             setLeft(sideBar);

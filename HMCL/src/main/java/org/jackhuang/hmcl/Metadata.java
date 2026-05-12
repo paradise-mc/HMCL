@@ -37,8 +37,23 @@ public final class Metadata {
     public static final String FULL_NAME = "Hello Minecraft! Launcher";
     public static final String VERSION = System.getProperty("hmcl.version.override", JarUtils.getAttribute("hmcl.version", "@develop@"));
 
-    public static final String TITLE = NAME + " " + VERSION;
-    public static final String FULL_TITLE = FULL_NAME + " v" + VERSION;
+    /// The fork product name shown to launcher users.
+    public static final String FORK_NAME = "椛鸟风月";
+
+    /// The fork product version, maintained independently from the upstream HMCL version.
+    public static final String FORK_VERSION = "2026.05.13a";
+
+    /// The fork title shown on user-facing launcher surfaces.
+    public static final String FORK_TITLE = FORK_NAME + " " + FORK_VERSION;
+
+    /// The upstream HMCL short title retained for diagnostics and maintenance.
+    public static final String UPSTREAM_TITLE = NAME + " " + VERSION;
+
+    /// The upstream HMCL full title retained for diagnostics and maintenance.
+    public static final String UPSTREAM_FULL_TITLE = FULL_NAME + " v" + VERSION;
+
+    public static final String TITLE = FORK_TITLE;
+    public static final String FULL_TITLE = FORK_TITLE;
 
     public static final int MINIMUM_REQUIRED_JAVA_VERSION = 17;
     public static final int MINIMUM_SUPPORTED_JAVA_VERSION = 17;
@@ -53,7 +68,18 @@ public final class Metadata {
     public static final String CONTACT_URL = DOCS_URL + "/help.html";
     public static final String CHANGELOG_URL = DOCS_URL + "/changelog/";
     public static final String EULA_URL = DOCS_URL + "/eula/hmcl.html";
-    public static final String GROUPS_URL = "https://www.bilibili.com/opus/905435541874409529";
+
+    /// The Paradise fork official website.
+    public static final String PARADISE_WEBSITE_URL = "https://paradise.mahoutsukai.cn";
+
+    /// The Paradise QQ group invite link.
+    public static final String PARADISE_QQ_GROUP_URL = "https://qm.qq.com/q/8csd09LJWE";
+
+    /// The Paradise Heybox voice link.
+    public static final String PARADISE_HEIHE_CHAT_URL = "https://chat.xiaoheihe.cn/i9ek1o";
+
+    /// The maintainer website linked from the About acknowledgements.
+    public static final String TILTY_WEBSITE_URL = "https://www.tiltysola.com";
 
     public static final String BUILD_CHANNEL = JarUtils.getAttribute("hmcl.version.type", "nightly");
     public static final String GITHUB_SHA = JarUtils.getAttribute("hmcl.version.hash", null);

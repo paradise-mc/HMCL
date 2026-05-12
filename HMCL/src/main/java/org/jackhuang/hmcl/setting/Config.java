@@ -728,21 +728,6 @@ public final class Config extends ObservableSetting {
         return authlibInjectorServers;
     }
 
-    @SerializedName("addedLittleSkin")
-    private final BooleanProperty addedLittleSkin = new SimpleBooleanProperty(false);
-
-    public BooleanProperty addedLittleSkinProperty() {
-        return addedLittleSkin;
-    }
-
-    public boolean isAddedLittleSkin() {
-        return addedLittleSkin.get();
-    }
-
-    public void setAddedLittleSkin(boolean addedLittleSkin) {
-        this.addedLittleSkin.set(addedLittleSkin);
-    }
-
     /**
      * The preferred login type to use when the user wants to add an account.
      */

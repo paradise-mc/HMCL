@@ -69,6 +69,17 @@ public final class Accounts {
 
     private static final AuthlibInjectorArtifactProvider AUTHLIB_INJECTOR_DOWNLOADER = createAuthlibInjectorArtifactProvider();
 
+    /// The Yggdrasil API root for the built-in Paradise authentication server.
+    public static final String BUILTIN_AUTHLIB_INJECTOR_SERVER_URL =
+            "https://paradise.mahoutsukai.cn/api/paradise/yggdrasil/";
+
+    /// The display name for the built-in Paradise authentication server.
+    public static final String BUILTIN_AUTHLIB_INJECTOR_SERVER_NAME = Metadata.FORK_NAME;
+
+    /// The built-in Paradise authentication server shown in the account list.
+    private static final AuthlibInjectorServer BUILTIN_AUTHLIB_INJECTOR_SERVER = new AuthlibInjectorServer(
+            BUILTIN_AUTHLIB_INJECTOR_SERVER_URL);
+
     public static final OAuthServer.Factory OAUTH_CALLBACK = new OAuthServer.Factory();
 
     public static final OfflineAccountFactory FACTORY_OFFLINE = new OfflineAccountFactory(AUTHLIB_INJECTOR_DOWNLOADER);
@@ -106,6 +117,18 @@ public final class Accounts {
 
     public static BoundAuthlibInjectorAccountFactory getAccountFactoryByAuthlibInjectorServer(AuthlibInjectorServer server) {
         return new BoundAuthlibInjectorAccountFactory(AUTHLIB_INJECTOR_DOWNLOADER, server);
+    }
+
+    /// Returns whether the authentication server is the built-in Paradise server.
+    public static boolean isBuiltinAuthlibInjectorServer(AuthlibInjectorServer server) {
+        return BUILTIN_AUTHLIB_INJECTOR_SERVER_URL.equals(server.getUrl());
+    }
+
+    /// Returns the fork-specific display name for built-in auth sources.
+    public static String getAuthlibInjectorServerDisplayName(AuthlibInjectorServer server) {
+        return isBuiltinAuthlibInjectorServer(server)
+                ? BUILTIN_AUTHLIB_INJECTOR_SERVER_NAME
+                : server.getName();
     }
     // ====
 
@@ -197,14 +220,8 @@ public final class Accounts {
         if (initialized)
             throw new IllegalStateException("Already initialized");
 
-        if (!config().isAddedLittleSkin()) {
-            AuthlibInjectorServer littleSkin = new AuthlibInjectorServer("https://littleskin.cn/api/yggdrasil/");
-
-            if (config().getAuthlibInjectorServers().stream().noneMatch(it -> littleSkin.getUrl().equals(it.getUrl()))) {
-                config().getAuthlibInjectorServers().add(0, littleSkin);
-            }
-
-            config().setAddedLittleSkin(true);
+        if (config().getAuthlibInjectorServers().stream().noneMatch(Accounts::isBuiltinAuthlibInjectorServer)) {
+            config().getAuthlibInjectorServers().add(0, BUILTIN_AUTHLIB_INJECTOR_SERVER);
         }
 
         loadGlobalAccountStorages();

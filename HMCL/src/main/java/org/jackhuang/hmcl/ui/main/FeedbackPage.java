@@ -19,16 +19,16 @@ package org.jackhuang.hmcl.ui.main;
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import org.jackhuang.hmcl.Metadata;
 import org.jackhuang.hmcl.theme.Themes;
 import org.jackhuang.hmcl.ui.FXUtils;
+import org.jackhuang.hmcl.ui.SVG;
 import org.jackhuang.hmcl.ui.WeakListenerHolder;
 import org.jackhuang.hmcl.ui.construct.ComponentList;
 import org.jackhuang.hmcl.ui.construct.LineButton;
 import org.jackhuang.hmcl.ui.construct.SpinnerPane;
 
 import static org.jackhuang.hmcl.util.i18n.I18n.i18n;
-
-import org.jackhuang.hmcl.Metadata;
 
 public class FeedbackPage extends SpinnerPane {
 
@@ -42,21 +42,27 @@ public class FeedbackPage extends SpinnerPane {
         FXUtils.smoothScrolling(scrollPane);
         setContent(scrollPane);
 
-        ComponentList groups = new ComponentList();
+        ComponentList paradise = new ComponentList();
         {
-            var users = LineButton.createExternalLinkButton(Metadata.GROUPS_URL);
-            users.setLargeTitle(true);
-            users.setLeading(FXUtils.newBuiltinImage("/assets/img/icon.png"));
-            users.setTitle(i18n("contact.chat.qq_group"));
-            users.setSubtitle(i18n("contact.chat.qq_group.statement"));
+            var website = LineButton.createExternalLinkButton(Metadata.PARADISE_WEBSITE_URL);
+            website.setLargeTitle(true);
+            website.setLeading(FXUtils.newBuiltinImage("/assets/img/paradise.png"));
+            website.setTitle(i18n("contact.paradise.website"));
+            website.setSubtitle(i18n("contact.paradise.website.statement"));
 
-            var discord = LineButton.createExternalLinkButton("https://discord.gg/jVvC7HfM6U");
-            discord.setLargeTitle(true);
-            discord.setLeading(FXUtils.newBuiltinImage("/assets/img/discord.png"));
-            discord.setTitle(i18n("contact.chat.discord"));
-            discord.setSubtitle(i18n("contact.chat.discord.statement"));
+            var qqGroup = LineButton.createExternalLinkButton(Metadata.PARADISE_QQ_GROUP_URL);
+            qqGroup.setLargeTitle(true);
+            qqGroup.setLeading(SVG.CHAT);
+            qqGroup.setTitle(i18n("contact.paradise.qq_group"));
+            qqGroup.setSubtitle(i18n("contact.paradise.qq_group.statement"));
 
-            groups.getContent().setAll(users, discord);
+            var heihe = LineButton.createExternalLinkButton(Metadata.PARADISE_HEIHE_CHAT_URL);
+            heihe.setLargeTitle(true);
+            heihe.setLeading(SVG.FEEDBACK);
+            heihe.setTitle(i18n("contact.paradise.heihe"));
+            heihe.setSubtitle(i18n("contact.paradise.heihe.statement"));
+
+            paradise.getContent().setAll(website, qqGroup, heihe);
         }
 
         ComponentList feedback = new ComponentList();
@@ -76,8 +82,8 @@ public class FeedbackPage extends SpinnerPane {
         }
 
         content.getChildren().addAll(
-                ComponentList.createComponentListTitle(i18n("contact.chat")),
-                groups,
+                ComponentList.createComponentListTitle(Metadata.FORK_NAME),
+                paradise,
                 ComponentList.createComponentListTitle(i18n("contact.feedback")),
                 feedback
         );

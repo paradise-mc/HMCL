@@ -34,11 +34,9 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.jackhuang.hmcl.Metadata;
 import org.jackhuang.hmcl.download.DefaultDependencyManager;
@@ -55,7 +53,6 @@ import org.jackhuang.hmcl.ui.Controllers;
 import org.jackhuang.hmcl.ui.FXUtils;
 import org.jackhuang.hmcl.ui.SVG;
 import org.jackhuang.hmcl.ui.animation.AnimationUtils;
-import org.jackhuang.hmcl.ui.animation.ContainerAnimations;
 import org.jackhuang.hmcl.ui.animation.TransitionPane;
 import org.jackhuang.hmcl.ui.construct.MessageDialogPane;
 import org.jackhuang.hmcl.ui.construct.TwoLineListItem;
@@ -85,8 +82,6 @@ import static org.jackhuang.hmcl.util.i18n.I18n.i18n;
 import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 
 public final class MainPage extends StackPane implements DecoratorPage {
-    private static final String ANNOUNCEMENT = "announcement";
-
     private final ReadOnlyObjectWrapper<State> state = new ReadOnlyObjectWrapper<>();
 
     private final StringProperty currentGame = new SimpleStringProperty(this, "currentGame");
@@ -95,7 +90,6 @@ public final class MainPage extends StackPane implements DecoratorPage {
     private final ObservableList<Version> versions = FXCollections.observableArrayList();
     private Profile profile;
 
-    private TransitionPane announcementPane;
     private final StackPane updatePane;
     private final JFXButton menuButton;
 
@@ -117,52 +111,6 @@ public final class MainPage extends StackPane implements DecoratorPage {
         state.setValue(new State(null, titleNode, false, false, true));
 
         setPadding(new Insets(20));
-
-        if (Metadata.isNightly() || (Metadata.isDev() && !Objects.equals(Metadata.VERSION, config().getShownTips().get(ANNOUNCEMENT)))) {
-            String title;
-            String content;
-            if (Metadata.isNightly()) {
-                title = i18n("update.channel.nightly.title");
-                content = i18n("update.channel.nightly.hint");
-            } else {
-                title = i18n("update.channel.dev.title");
-                content = i18n("update.channel.dev.hint");
-            }
-
-            VBox announcementCard = new VBox();
-
-            BorderPane titleBar = new BorderPane();
-            titleBar.getStyleClass().add("title");
-            titleBar.setLeft(new Label(title));
-
-            JFXButton btnHide = new JFXButton();
-            btnHide.setOnAction(e -> {
-                announcementPane.setContent(new StackPane(), ContainerAnimations.FADE);
-                if (Metadata.isDev()) {
-                    config().getShownTips().put(ANNOUNCEMENT, Metadata.VERSION);
-                }
-            });
-            btnHide.getStyleClass().add("announcement-close-button");
-            btnHide.setGraphic(SVG.CLOSE.createIcon(20));
-            titleBar.setRight(btnHide);
-
-            TextFlow body = FXUtils.segmentToTextFlow(content, Controllers::onHyperlinkAction);
-            body.setLineSpacing(4);
-
-            announcementCard.getChildren().setAll(titleBar, body);
-            announcementCard.setSpacing(16);
-            announcementCard.getStyleClass().addAll("card", "announcement");
-
-            VBox announcementBox = new VBox(16);
-            announcementBox.setPadding(new Insets(15));
-            announcementBox.getChildren().add(announcementCard);
-
-            announcementPane = new TransitionPane();
-            announcementPane.setContent(announcementBox, ContainerAnimations.NONE);
-
-            StackPane.setMargin(announcementPane, new Insets(-15));
-            getChildren().add(announcementPane);
-        }
 
         updatePane = new StackPane();
         updatePane.setVisible(false);

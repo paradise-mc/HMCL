@@ -144,22 +144,28 @@ public final class AccountListPage extends DecoratorAnimatedPage implements Deco
                         item.getStyleClass().add("navigation-drawer-item");
                         item.setLeftIcon(SVG.DRESSER);
                         item.setOnAction(e -> Controllers.dialog(new CreateAccountPane(server)));
-                        item.setRightAction(SVG.CLOSE, () -> Controllers.confirm(i18n("button.remove.confirm"), i18n("button.remove"), () -> {
-                            skinnable.authServersProperty().remove(server);
-                        }, null));
-
-                        ObservableValue<String> title = BindingMapping.of(server, AuthlibInjectorServer::getName);
-                        item.titleProperty().bind(title);
-                        String host = "";
-                        try {
-                            host = NetworkUtils.toURI(server.getUrl()).getHost();
-                        } catch (IllegalArgumentException e) {
-                            LOG.warning("Unparsable authlib-injector server url " + server.getUrl(), e);
+                        if (!Accounts.isBuiltinAuthlibInjectorServer(server)) {
+                            item.setRightAction(SVG.CLOSE,
+                                    () -> Controllers.confirm(i18n("button.remove.confirm"), i18n("button.remove"),
+                                            () -> skinnable.authServersProperty().remove(server), null));
                         }
-                        item.subtitleProperty().set(host);
-                        Tooltip tooltip = new Tooltip();
-                        tooltip.textProperty().bind(Bindings.format("%s (%s)", title, server.getUrl()));
-                        FXUtils.installFastTooltip(item, tooltip);
+
+                        if (Accounts.isBuiltinAuthlibInjectorServer(server)) {
+                            item.setTitle(Accounts.BUILTIN_AUTHLIB_INJECTOR_SERVER_NAME);
+                        } else {
+                            ObservableValue<String> title = BindingMapping.of(server, AuthlibInjectorServer::getName);
+                            item.titleProperty().bind(title);
+                            String host = "";
+                            try {
+                                host = NetworkUtils.toURI(server.getUrl()).getHost();
+                            } catch (IllegalArgumentException e) {
+                                LOG.warning("Unparsable authlib-injector server url " + server.getUrl(), e);
+                            }
+                            item.subtitleProperty().set(host);
+                            Tooltip tooltip = new Tooltip();
+                            tooltip.textProperty().bind(Bindings.format("%s (%s)", title, server.getUrl()));
+                            FXUtils.installFastTooltip(item, tooltip);
+                        }
 
                         return item;
                     });

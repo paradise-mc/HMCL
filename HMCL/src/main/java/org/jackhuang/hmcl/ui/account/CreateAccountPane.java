@@ -52,7 +52,6 @@ import org.jackhuang.hmcl.ui.Controllers;
 import org.jackhuang.hmcl.ui.FXUtils;
 import org.jackhuang.hmcl.ui.SVG;
 import org.jackhuang.hmcl.ui.construct.*;
-import org.jackhuang.hmcl.upgrade.IntegrityChecker;
 import org.jackhuang.hmcl.util.StringUtils;
 import org.jackhuang.hmcl.util.gson.UUIDTypeAdapter;
 import org.jackhuang.hmcl.util.javafx.BindingMapping;
@@ -337,15 +336,6 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
 
             int rowIndex = 0;
 
-            if (!IntegrityChecker.isOfficial() && !(factory instanceof OfflineAccountFactory)) {
-                HintPane hintPane = new HintPane(MessageDialogPane.MessageType.WARNING);
-                hintPane.setSegment(i18n("unofficial.hint"));
-                GridPane.setColumnSpan(hintPane, 2);
-                add(hintPane, 0, rowIndex);
-
-                rowIndex++;
-            }
-
             if (factory instanceof BoundAuthlibInjectorAccountFactory) {
                 this.server = ((BoundAuthlibInjectorAccountFactory) factory).getServer();
 
@@ -353,7 +343,7 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
                 setHalignment(lblServers, HPos.LEFT);
                 add(lblServers, 0, rowIndex);
 
-                Label lblServerName = new Label(this.server.getName());
+                Label lblServerName = new Label(Accounts.getAuthlibInjectorServerDisplayName(this.server));
                 lblServerName.setMaxWidth(Double.MAX_VALUE);
                 HBox.setHgrow(lblServerName, Priority.ALWAYS);
 
@@ -373,8 +363,10 @@ public class CreateAccountPane extends JFXDialogLayout implements DialogAware {
                 add(lblServers, 0, rowIndex);
 
                 cboServers = new JFXComboBox<>();
-                cboServers.setCellFactory(jfxListCellFactory(server -> new TwoLineListItem(server.getName(), server.getUrl())));
-                cboServers.setConverter(stringConverter(AuthlibInjectorServer::getName));
+                cboServers.setCellFactory(jfxListCellFactory(server -> new TwoLineListItem(
+                        Accounts.getAuthlibInjectorServerDisplayName(server),
+                        Accounts.isBuiltinAuthlibInjectorServer(server) ? "" : server.getUrl())));
+                cboServers.setConverter(stringConverter(Accounts::getAuthlibInjectorServerDisplayName));
                 bindContent(cboServers.getItems(), config().getAuthlibInjectorServers());
                 cboServers.getItems().addListener(onInvalidating(
                         () -> Platform.runLater( // the selection will not be updated as expected if we call it immediately

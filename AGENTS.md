@@ -25,3 +25,8 @@ These rules apply to all Java code written or modified in this repository.
 - When invoking Gradle in this repository, always set `GRADLE_USER_HOME` to the workspace-local `.gradle-user-home` directory.
 - Prefer commands such as `./gradlew -g .gradle-user-home ...` or the equivalent environment-variable-based configuration.
 - When running Gradle `test` tasks, use a higher timeout of ten minutes.
+
+## Fork Maintenance
+
+- Any repository change that affects fork behavior, branding, defaults, resources, links, warnings, build metadata, or maintenance workflow must also update `FORK.MD`.
+- Keep `FORK.MD` accurate enough for future upstream merges to preserve fork-specific changes and understand why they exist.
