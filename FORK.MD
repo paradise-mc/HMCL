@@ -4,7 +4,9 @@
 
 - 产品名：椛鸟风月
 - Fork 版本：2026.05.13a
-- Fork 版本字段：`Metadata.FORK_VERSION`
+- Fork 版本配置：`config/project.properties` 的 `forkVersion`
+- Fork 版本字段：`Metadata.FORK_VERSION`，运行时读取 `hmcl.fork.version`
+- 构建产物命名：`PARADISE-2026.05.13a.*`
 - 上游 HMCL 版本字段：`Metadata.VERSION`
 - 用户可见标题：`Metadata.FORK_TITLE`
 - 官网：<https://paradise.mahoutsukai.cn>
@@ -29,6 +31,7 @@
 - 内置 `椛鸟风月` 登录源不可删除；用户自定义 authlib-injector 登录源仍可删除。
 - 移除 LittleSkin 默认源状态字段 `addedLittleSkin` 及其主动使用，Paradise 内置源不再依赖 LittleSkin 迁移标记。
 - 启动器用户可见名称改为 `椛鸟风月 2026.05.13a`，同时保留上游 HMCL 版本信息用于诊断、更新逻辑和维护记录。
+- 构建产物文件名改为 `PARADISE-(Fork Version)`，当前为 `PARADISE-2026.05.13a.jar`，派生的 `.exe`、`.sh`、`.deb` 和校验文件沿用同一前缀。
 - 移除主界面的 nightly/dev 预览提示卡片。
 - 移除账号登录流程里的非官方 HMCL 警告；微软 OAuth 未配置时显示中性的配置提示。
 - 移除标准窗口装饰右上角问号帮助按钮。
@@ -89,6 +92,8 @@
 ## 维护入口
 
 - 维护规则：任何影响 fork 行为、品牌、默认值、资源、链接、提示、构建元数据或维护流程的仓库改动，都需要同步更新本文件，避免合并上游时丢失改动记录。
+- Fork 版本和构建文件名前缀：`config/project.properties`
+- 构建产物命名和 `hmcl.fork.version` 生成：`HMCL/build.gradle.kts`
 - 品牌、版本和链接常量：`HMCL/src/main/java/org/jackhuang/hmcl/Metadata.java`
 - 内置登录源常量和判定：`HMCL/src/main/java/org/jackhuang/hmcl/setting/Accounts.java`
 - 添加账户列表展示和删除按钮：`HMCL/src/main/java/org/jackhuang/hmcl/ui/account/AccountListPage.java`

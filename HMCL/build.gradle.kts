@@ -28,6 +28,8 @@ val isOfficial = JenkinsUtils.IS_ON_CI || GitHubActionUtils.IS_ON_OFFICIAL_REPO
 
 val versionType = System.getenv("VERSION_TYPE") ?: if (isOfficial) "nightly" else "unofficial"
 val versionRoot = System.getenv("VERSION_ROOT") ?: projectConfig.getProperty("versionRoot") ?: "3"
+val forkVersion = System.getenv("FORK_VERSION") ?: projectConfig.getProperty("forkVersion") ?: "2026.05.13a"
+val forkArchiveBaseName = System.getenv("FORK_ARCHIVE_BASE_NAME") ?: projectConfig.getProperty("forkArchiveBaseName") ?: "PARADISE"
 
 val microsoftAuthId = System.getenv("MICROSOFT_AUTH_ID") ?: ""
 val curseForgeApiKey = System.getenv("CURSEFORGE_API_KEY") ?: ""
@@ -151,6 +153,7 @@ tasks.compileJava {
 
 val hmclProperties = buildList {
     add("hmcl.version" to project.version.toString())
+    add("hmcl.fork.version" to forkVersion)
     add("hmcl.add-opens" to addOpens.joinToString(" "))
     System.getenv("GITHUB_SHA")?.let {
         add("hmcl.version.hash" to it)
@@ -181,6 +184,11 @@ val createPropertiesFile by tasks.registering {
 tasks.jar {
     enabled = false
     dependsOn(tasks["shadowJar"])
+}
+
+tasks.withType<AbstractArchiveTask>().configureEach {
+    archiveBaseName.set(forkArchiveBaseName)
+    archiveVersion.set(forkVersion)
 }
 
 val jarPath = tasks.jar.get().archiveFile.get().asFile

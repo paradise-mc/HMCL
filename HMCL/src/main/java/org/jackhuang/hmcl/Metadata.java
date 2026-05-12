@@ -41,7 +41,7 @@ public final class Metadata {
     public static final String FORK_NAME = "椛鸟风月";
 
     /// The fork product version, maintained independently from the upstream HMCL version.
-    public static final String FORK_VERSION = "2026.05.13a";
+    public static final String FORK_VERSION = JarUtils.getAttribute("hmcl.fork.version", "2026.05.13a");
 
     /// The fork title shown on user-facing launcher surfaces.
     public static final String FORK_TITLE = FORK_NAME + " " + FORK_VERSION;
