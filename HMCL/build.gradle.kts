@@ -312,7 +312,8 @@ val generateUpdateJson by tasks.registering {
               "jarsha1": ${jsonString(digestHex("SHA-1", jarBytes))},
               "force": false
             }
-            """.trimIndent() + "\n"
+            """.trimIndent() + "\n",
+            Charsets.UTF_8
         )
     }
 }

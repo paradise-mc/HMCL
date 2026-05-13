@@ -7,7 +7,7 @@ The implementation must keep upstream HMCL version information available for mai
 ## Goals / Non-Goals
 
 **Goals:**
-- Present 椛鸟风月 as the launcher identity with fork version `2026.05.13a`.
+- Present 椛鸟风月 as the launcher identity with the configured fork version.
 - Keep upstream HMCL version/base information separately available for diagnostics and `FORK.MD`.
 - Make the Paradise authentication source built in, name-only in account creation UI, and not removable.
 - Remove user-facing HMCL preview/unofficial warnings and top-right help affordance.

@@ -71,3 +71,9 @@ language-subtag-registry
 !/.gemini/config.yaml
 .codex
 /.gradle-*/
+
+# signing keys
+/hmcl_private.pem
+/hmcl_signature_privatekey.der
+/hmcl_private.pem.bak-*
+/hmcl_signature_privatekey.der.bak-*

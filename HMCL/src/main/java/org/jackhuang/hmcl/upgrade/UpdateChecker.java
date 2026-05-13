@@ -40,15 +40,15 @@ public final class UpdateChecker {
     private static final BooleanBinding outdated = Bindings.createBooleanBinding(
             () -> {
                 RemoteVersion latest = latestVersion.get();
-                if (latest == null || isDevelopmentVersion(Metadata.VERSION)) {
+                if (latest == null || isDevelopmentVersion(Metadata.FORK_VERSION)) {
                     return false;
                 } else if (latest.force()
                         || Metadata.isNightly()
                         || latest.channel() == UpdateChannel.NIGHTLY
                         || latest.channel() != UpdateChannel.getChannel()) {
-                    return !latest.version().equals(Metadata.VERSION);
+                    return !latest.version().equals(Metadata.FORK_VERSION);
                 } else {
-                    return VersionNumber.compare(Metadata.VERSION, latest.version()) < 0;
+                    return VersionNumber.compare(Metadata.FORK_VERSION, latest.version()) < 0;
                 }
             },
             latestVersion);
@@ -88,7 +88,7 @@ public final class UpdateChecker {
         }
 
         var query = new LinkedHashMap<String, String>();
-        query.put("version", Metadata.VERSION);
+        query.put("version", Metadata.FORK_VERSION);
         query.put("channel", preview ? channel.channelName + "-preview" : channel.channelName);
 
         String url = NetworkUtils.withQuery(Metadata.HMCL_UPDATE_URL, query);

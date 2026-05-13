@@ -1,11 +1,11 @@
 ## ADDED Requirements
 
 ### Requirement: Launcher identity uses Paradise branding
-The launcher SHALL present the product name `椛鸟风月` and fork version `2026.05.13a` on user-facing launcher identity surfaces while preserving upstream HMCL version information separately for diagnostics and maintenance.
+The launcher SHALL present the product name `椛鸟风月` and the configured fork version on user-facing launcher identity surfaces while preserving upstream HMCL version information separately for diagnostics and maintenance.
 
 #### Scenario: Main window title
 - **WHEN** the launcher main window is displayed
-- **THEN** the visible title identifies the launcher as `椛鸟风月 2026.05.13a`
+- **THEN** the visible title identifies the launcher as `椛鸟风月 <forkVersion>`
 
 #### Scenario: Upstream version retained
 - **WHEN** diagnostics or maintenance documentation need upstream base information
@@ -50,7 +50,7 @@ The About page SHALL place Paradise fork information and acknowledgements at the
 
 #### Scenario: About summary renders
 - **WHEN** the user opens About
-- **THEN** `椛鸟风月` and fork version `2026.05.13a` appear before upstream HMCL details
+- **THEN** `椛鸟风月` and the configured fork version appear before upstream HMCL details
 
 #### Scenario: About thanks renders
 - **WHEN** the user views About acknowledgements

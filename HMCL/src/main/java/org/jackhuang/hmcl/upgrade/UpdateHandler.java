@@ -179,7 +179,7 @@ public final class UpdateHandler {
         }
         ExecutableHeaderHelper.copyWithHeader(self, target);
 
-        Optional<Path> newFilename = tryRename(target, Metadata.VERSION);
+        Optional<Path> newFilename = tryRename(target, Metadata.FORK_VERSION);
         if (newFilename.isPresent()) {
             LOG.info("Move " + target + " to " + newFilename.get());
             try {
@@ -231,7 +231,7 @@ public final class UpdateHandler {
 
     private static Optional<Path> tryRename(Path path, String newVersion) {
         String filename = path.getFileName().toString();
-        Matcher matcher = Pattern.compile("^(?<prefix>[hH][mM][cC][lL][.-])(?<version>\\d+(?:\\.\\d+)*)(?<suffix>\\.[^.]+)$").matcher(filename);
+        Matcher matcher = Pattern.compile("^(?<prefix>(?:[hH][mM][cC][lL]|PARADISE)[.-])(?<version>\\d+(?:\\.\\d+)*(?:[A-Za-z][A-Za-z0-9]*)?)(?<suffix>\\.[^.]+)$").matcher(filename);
         if (matcher.find()) {
             String newFilename = matcher.group("prefix") + newVersion + matcher.group("suffix");
             if (!newFilename.equals(filename)) {

@@ -7,7 +7,7 @@ The fork needs first-class Paradise identity instead of surfacing upstream HMCL 
 - Make the 椛鸟风月 Yggdrasil login source built in, visible by name only under Add Account, and not removable by users.
 - Remove obsolete LittleSkin migration/default code and any remaining delete affordance for the built-in 椛鸟风月 source.
 - Remove preview/non-official HMCL warnings and the top-right help question mark entry point.
-- Rename the launcher display name to 椛鸟风月 and add an independent fork version field set to `2026.05.13a`, separate from the upstream HMCL version.
+- Rename the launcher display name to 椛鸟风月 and add an independent configured fork version field, separate from the upstream HMCL version.
 - Replace official group/community exposure in General settings with a Paradise official website link.
 - Add a 椛鸟风月 tab under Settings/Feedback containing links for official website, QQ group, and 黑盒语音.
 - Add 椛鸟风月 and its fork version at the top of About, and add 缇尔蒂 to thanks at the top, with the requested outbound links.

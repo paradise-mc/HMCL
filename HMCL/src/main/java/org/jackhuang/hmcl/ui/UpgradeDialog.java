@@ -50,11 +50,11 @@ public final class UpgradeDialog extends JFXDialogLayout {
         setHeading(new Label(i18n("update.changelog")));
         setBody(new JFXSpinner());
 
-        String url = CHANGELOG_URL + remoteVersion.channel().channelName + ".html";
+        String url = CHANGELOG_URL;
 
         Task.supplyAsync(Schedulers.io(), () -> {
             VersionNumber targetVersion = VersionNumber.asVersion(remoteVersion.version());
-            VersionNumber currentVersion = VersionNumber.asVersion(Metadata.VERSION);
+            VersionNumber currentVersion = VersionNumber.asVersion(Metadata.FORK_VERSION);
             if (targetVersion.compareTo(currentVersion) <= 0)
                 // Downgrade update, no need to display changelog
                 return null;

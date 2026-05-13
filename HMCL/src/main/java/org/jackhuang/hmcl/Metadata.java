@@ -41,7 +41,7 @@ public final class Metadata {
     public static final String FORK_NAME = "椛鸟风月";
 
     /// The fork product version, maintained independently from the upstream HMCL version.
-    public static final String FORK_VERSION = JarUtils.getAttribute("hmcl.fork.version", "2026.05.13a");
+    public static final String FORK_VERSION = System.getProperty("hmcl.fork.version.override", JarUtils.getAttribute("hmcl.fork.version", "0"));
 
     /// The fork title shown on user-facing launcher surfaces.
     public static final String FORK_TITLE = FORK_NAME + " " + FORK_VERSION;
@@ -67,7 +67,7 @@ public final class Metadata {
 
     public static final String DOCS_URL = "https://docs.hmcl.net";
     public static final String CONTACT_URL = DOCS_URL + "/help.html";
-    public static final String CHANGELOG_URL = DOCS_URL + "/changelog/";
+    public static final String CHANGELOG_URL = "https://cdn.tiltysola.com/distro/hmcl/changelog.html";
     public static final String EULA_URL = DOCS_URL + "/eula/hmcl.html";
 
     /// The Paradise fork official website.

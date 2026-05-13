@@ -14,7 +14,7 @@
 
 ## 3. Fork Branding And Versioning
 
-- [x] 3.1 Add fork identity metadata for display name `椛鸟风月` and fork version `2026.05.13a`.
+- [x] 3.1 Add fork identity metadata for display name `椛鸟风月` and the configured fork version.
 - [x] 3.2 Keep upstream HMCL version metadata available separately for diagnostics, logs, and `FORK.MD`.
 - [x] 3.3 Update main window title, main page title, and user-facing launcher identity surfaces to use Paradise branding.
 - [x] 3.4 Remove preview/nightly/dev announcement behavior from the main page for normal fork builds.

@@ -3,10 +3,10 @@
 ## Fork 标识
 
 - 产品名：椛鸟风月
-- Fork 版本：2026.05.13a
+- Fork 版本：由 `config/project.properties` 的 `forkVersion` 配置
 - Fork 版本配置：`config/project.properties` 的 `forkVersion`
 - Fork 版本字段：`Metadata.FORK_VERSION`，运行时读取 `hmcl.fork.version`
-- 构建产物命名：`PARADISE-2026.05.13a.*`
+- 构建产物命名：`PARADISE-(Fork Version).*`
 - 更新下载前缀：`config/project.properties` 的 `forkUpdateDownloadBaseUrl`
 - 上游 HMCL 版本字段：`Metadata.VERSION`
 - 用户可见标题：`Metadata.FORK_TITLE`
@@ -31,10 +31,15 @@
 - 添加账户列表中，内置 `椛鸟风月` 只显示名称，不显示 API 地址、主机名或包含 API 地址的提示。
 - 内置 `椛鸟风月` 登录源不可删除；用户自定义 authlib-injector 登录源仍可删除。
 - 移除 LittleSkin 默认源状态字段 `addedLittleSkin` 及其主动使用，Paradise 内置源不再依赖 LittleSkin 迁移标记。
-- 启动器用户可见名称改为 `椛鸟风月 2026.05.13a`，同时保留上游 HMCL 版本信息用于诊断、更新逻辑和维护记录。
-- 构建产物文件名改为 `PARADISE-(Fork Version)`，当前为 `PARADISE-2026.05.13a.jar`，派生的 `.exe`、`.sh`、`.deb` 和校验文件沿用同一前缀。
+- 启动器用户可见名称改为 `椛鸟风月 (Fork Version)`，同时保留上游 HMCL 版本信息用于诊断、更新逻辑和维护记录。
+- 构建产物文件名改为 `PARADISE-(Fork Version)`，派生的 `.exe`、`.sh`、`.deb` 和校验文件沿用同一前缀。
 - 构建时在 jar 输出目录生成 `distribution.json` 更新描述文件，可通过 `https://cdn.tiltysola.com/distro/hmcl/distribution.json` 分发；默认 jar 下载地址格式为 `https://cdn.tiltysola.com/distro/hmcl/PARADISE-(Fork Version).jar`。
+- 签名构建使用仓库根目录的 `build-signed.sh`，脚本读取本地私钥 `hmcl_signature_privatekey.der` 并设置 `HMCL_SIGNATURE_KEY` 后执行 Gradle；私钥文件已在 `.gitignore` 中忽略，不能提交到仓库。
 - 启动器默认更新源改为 `https://cdn.tiltysola.com/distro/hmcl/distribution.json`；`hmcl.update_source.override` 仍可在本地测试时覆盖。
+- Fork 更新检查使用 `Metadata.FORK_VERSION` 和 `distribution.json` 中的 `version` 比较，不再使用上游 `Metadata.VERSION`；更新请求里的 `version` 参数也传 fork 版本。
+- 更新弹窗保留上游 HTML 更新日志解析逻辑，但更新日志地址固定为 `https://cdn.tiltysola.com/distro/hmcl/changelog.html`，不再指向 HMCL 官方更新日志页面。
+- 仓库根目录的 `changelog.html` 是 CDN 更新日志源文件，需上传到 `https://cdn.tiltysola.com/distro/hmcl/changelog.html`；版本标题必须使用 `h1 data-version="(Fork Version)"`，以匹配启动器更新弹窗解析逻辑。
+- 应用更新时支持把当前 `PARADISE-(Fork Version).exe` 重命名为新 fork 版本文件名。
 - 更新设置中的通道选择固定为稳定版，启动时自动检查也使用 `stable` 通道；“提前预览 HMCL 版本”选项已从设置页移除，检查更新始终不请求 preview；“不自动显示更新弹窗”只影响新版本提示弹窗，不影响后台检查、右上角更新气泡或 `distribution.json` 中的 jar 下载地址。
 - 移除主界面的 nightly/dev 预览提示卡片。
 - 移除账号登录流程里的非官方 HMCL 警告；微软 OAuth 未配置时显示中性的配置提示。
@@ -111,10 +116,11 @@
 
 - 维护规则：任何影响 fork 行为、品牌、默认值、资源、链接、提示、构建元数据或维护流程的仓库改动，都需要同步更新本文件，避免合并上游时丢失改动记录。
 - Fork 版本和构建文件名前缀：`config/project.properties`
+- 签名构建入口：`build-signed.sh`
 - 构建产物命名、`hmcl.fork.version` 生成和更新 JSON 生成：`HMCL/build.gradle.kts`
 - 品牌、版本和链接常量：`HMCL/src/main/java/org/jackhuang/hmcl/Metadata.java`
 - 更新源默认值和 `hmcl.update_source.override` 覆盖入口：`HMCL/src/main/java/org/jackhuang/hmcl/Metadata.java`
-- 更新设置项和稳定版通道固定：`HMCL/src/main/java/org/jackhuang/hmcl/ui/main/SettingsPage.java`、`HMCL/src/main/java/org/jackhuang/hmcl/upgrade/UpdateChecker.java`
+- 更新设置项、稳定版通道固定、fork 版本比较和更新应用重命名：`HMCL/src/main/java/org/jackhuang/hmcl/ui/main/SettingsPage.java`、`HMCL/src/main/java/org/jackhuang/hmcl/upgrade/UpdateChecker.java`、`HMCL/src/main/java/org/jackhuang/hmcl/upgrade/UpdateHandler.java`
 - 内置登录源常量和判定：`HMCL/src/main/java/org/jackhuang/hmcl/setting/Accounts.java`
 - 添加账户列表展示和删除按钮：`HMCL/src/main/java/org/jackhuang/hmcl/ui/account/AccountListPage.java`
 - 登录源选择展示：`HMCL/src/main/java/org/jackhuang/hmcl/ui/account/CreateAccountPane.java`
