@@ -22,7 +22,6 @@ import javafx.scene.layout.VBox;
 import org.jackhuang.hmcl.Metadata;
 import org.jackhuang.hmcl.theme.Themes;
 import org.jackhuang.hmcl.ui.FXUtils;
-import org.jackhuang.hmcl.ui.SVG;
 import org.jackhuang.hmcl.ui.WeakListenerHolder;
 import org.jackhuang.hmcl.ui.construct.ComponentList;
 import org.jackhuang.hmcl.ui.construct.LineButton;
@@ -52,13 +51,13 @@ public class FeedbackPage extends SpinnerPane {
 
             var qqGroup = LineButton.createExternalLinkButton(Metadata.PARADISE_QQ_GROUP_URL);
             qqGroup.setLargeTitle(true);
-            qqGroup.setLeading(SVG.CHAT);
+            qqGroup.setLeading(FXUtils.newBuiltinImage("/assets/img/paradise-qq.png"), 32);
             qqGroup.setTitle(i18n("contact.paradise.qq_group"));
             qqGroup.setSubtitle(i18n("contact.paradise.qq_group.statement"));
 
             var heihe = LineButton.createExternalLinkButton(Metadata.PARADISE_HEIHE_CHAT_URL);
             heihe.setLargeTitle(true);
-            heihe.setLeading(SVG.FEEDBACK);
+            heihe.setLeading(FXUtils.newBuiltinImage("/assets/img/paradise-heybox.png"), 32);
             heihe.setTitle(i18n("contact.paradise.heihe"));
             heihe.setSubtitle(i18n("contact.paradise.heihe.statement"));
 

@@ -30,6 +30,9 @@ val versionType = System.getenv("VERSION_TYPE") ?: if (isOfficial) "nightly" els
 val versionRoot = System.getenv("VERSION_ROOT") ?: projectConfig.getProperty("versionRoot") ?: "3"
 val forkVersion = System.getenv("FORK_VERSION") ?: projectConfig.getProperty("forkVersion") ?: "2026.05.13a"
 val forkArchiveBaseName = System.getenv("FORK_ARCHIVE_BASE_NAME") ?: projectConfig.getProperty("forkArchiveBaseName") ?: "PARADISE"
+val forkUpdateDownloadBaseUrl = System.getenv("FORK_UPDATE_DOWNLOAD_BASE_URL")
+    ?: projectConfig.getProperty("forkUpdateDownloadBaseUrl")
+    ?: "https://cdn.tiltysola.com/distro/hmcl"
 
 val microsoftAuthId = System.getenv("MICROSOFT_AUTH_ID") ?: ""
 val curseForgeApiKey = System.getenv("CURSEFORGE_API_KEY") ?: ""
@@ -76,6 +79,31 @@ dependencies {
 
 fun digest(algorithm: String, bytes: ByteArray): ByteArray = MessageDigest.getInstance(algorithm).digest(bytes)
 
+fun digestHex(algorithm: String, bytes: ByteArray): String =
+    digest(algorithm, bytes).joinToString(separator = "") { "%02x".format(it) }
+
+fun jsonString(value: String): String =
+    buildString {
+        append('"')
+        for (ch in value) {
+            when (ch) {
+                '\\' -> append("\\\\")
+                '"' -> append("\\\"")
+                '\b' -> append("\\b")
+                '\u000C' -> append("\\f")
+                '\n' -> append("\\n")
+                '\r' -> append("\\r")
+                '\t' -> append("\\t")
+                else -> if (ch < ' ') {
+                    append("\\u%04x".format(ch.code))
+                } else {
+                    append(ch)
+                }
+            }
+        }
+        append('"')
+    }
+
 fun createChecksum(file: File) {
     val algorithms = linkedMapOf(
         "SHA-1" to "sha1",
@@ -85,7 +113,7 @@ fun createChecksum(file: File) {
 
     algorithms.forEach { (algorithm, ext) ->
         File(file.parentFile, "${file.name}.$ext").writeText(
-            digest(algorithm, file.readBytes()).joinToString(separator = "", postfix = "\n") { "%02x".format(it) }
+            digestHex(algorithm, file.readBytes()) + "\n"
         )
     }
 }
@@ -263,6 +291,32 @@ tasks.processResources {
 
 fun artifactFile(ext: String) = jarPath.resolveSibling(jarPath.nameWithoutExtension + '.' + ext)
 
+val generateUpdateJson by tasks.registering {
+    dependsOn(tasks.jar)
+
+    val updateJsonFile = layout.file(provider { jarPath.resolveSibling("distribution.json") })
+
+    inputs.file(jarPath)
+    inputs.property("forkVersion", forkVersion)
+    inputs.property("forkUpdateDownloadBaseUrl", forkUpdateDownloadBaseUrl)
+    outputs.file(updateJsonFile)
+
+    doLast {
+        val jarBytes = jarPath.readBytes()
+        val jarUrl = forkUpdateDownloadBaseUrl.trimEnd('/') + "/" + jarPath.name
+        updateJsonFile.get().asFile.writeText(
+            """
+            {
+              "version": ${jsonString(forkVersion)},
+              "jar": ${jsonString(jarUrl)},
+              "jarsha1": ${jsonString(digestHex("SHA-1", jarBytes))},
+              "force": false
+            }
+            """.trimIndent() + "\n"
+        )
+    }
+}
+
 val makeExecutables by tasks.registering {
     val extensions = listOf("exe", "sh")
 
@@ -314,6 +368,7 @@ val makeDeb by tasks.registering(CreateDeb::class) {
 }
 
 tasks.build {
+    dependsOn(generateUpdateJson)
     dependsOn(makeExecutables)
     dependsOn(makeDeb)
 }

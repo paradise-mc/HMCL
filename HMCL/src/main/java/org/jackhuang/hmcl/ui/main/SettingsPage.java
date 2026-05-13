@@ -106,10 +106,10 @@ public final class SettingsPage extends ScrollPane {
                     };
                     updateChannel = updatePane.valueProperty();
                     updatePane.setTitle(i18n("update"));
-                    updatePane.setValue(UpdateChannel.getChannel());
+                    updatePane.setValue(UpdateChannel.STABLE);
 
                     updatePane.setNullSafeConverter(channel -> i18n("update.channel." + channel.channelName));
-                    updatePane.setItems(List.of(UpdateChannel.STABLE, UpdateChannel.DEVELOPMENT));
+                    updatePane.setItems(List.of(UpdateChannel.STABLE));
                     updatePane.setDescriptionConverter(channel -> i18n("update.note." + channel.channelName));
 
                     final StringProperty lblUpdateSubProperty = updatePane.subtitleProperty();
@@ -137,21 +137,6 @@ public final class SettingsPage extends ScrollPane {
                     }
 
                     updatePaneList.getContent().add(updatePane);
-                }
-
-                {
-                    LineToggleButton previewPane = new LineToggleButton();
-                    previewPane.setTitle(i18n("update.preview"));
-                    previewPane.setSubtitle(i18n("update.preview.subtitle"));
-                    previewPane.selectedProperty().bindBidirectional(config().acceptPreviewUpdateProperty());
-
-                    InvalidationListener checkUpdateListener = e -> {
-                        UpdateChecker.requestCheckUpdate(updateChannel.get(), previewPane.isSelected());
-                    };
-                    updateChannel.addListener(checkUpdateListener);
-                    previewPane.selectedProperty().addListener(checkUpdateListener);
-
-                    updatePaneList.getContent().add(previewPane);
                 }
 
                 {

@@ -61,7 +61,8 @@ public final class Metadata {
 
     public static final String PUBLISH_URL = "https://hmcl.huangyuhui.net";
     public static final String DOWNLOAD_URL = PUBLISH_URL + "/download";
-    public static final String HMCL_UPDATE_URL = System.getProperty("hmcl.update_source.override", PUBLISH_URL + "/api/update_link");
+    public static final String PARADISE_UPDATE_URL = "https://cdn.tiltysola.com/distro/hmcl/distribution.json";
+    public static final String HMCL_UPDATE_URL = System.getProperty("hmcl.update_source.override", PARADISE_UPDATE_URL);
     public static final String MANUAL_UPDATE_URL = "https://github.com/HMCL-dev/HMCL/releases";
 
     public static final String DOCS_URL = "https://docs.hmcl.net";
